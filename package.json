@@ -14,6 +14,7 @@
     "dev:web": "vite",
     "build": "vite build",
     "build:static": "vite build --mode static",
+    "build:artifact": "vite build --mode artifact && tsx scripts/inline-artifact.ts",
     "start": "tsx src/server/index.ts",
     "mcp": "tsx src/mcp/tg-server.ts",
     "validate": "tsx scripts/validate.ts",

@@ -1,0 +1,1061 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpmn:definitions xmlns:bpmn="http://www.omg.org/spec/BPMN/20100524/MODEL" xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI" xmlns:dc="http://www.omg.org/spec/DD/20100524/DC" xmlns:di="http://www.omg.org/spec/DD/20100524/DI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" id="Definitions_E2E" targetNamespace="urn:tg-ki-im-service:bpmn:E2E" exporter="TG KI im Service – Arbeitsplattform" exporterVersion="0.1">
+  <bpmn:collaboration id="Collaboration_E2E">
+    <bpmn:participant id="Participant_Kunde" name="Kunde" />
+    <bpmn:participant id="Participant_Main" name="E2E Serviceprozess End-to-End (SAP-Standard heute, mit In-House Service)" processRef="Process_E2E" />
+    <bpmn:messageFlow id="Msg_in_E01" name="Störung / Anfrage" sourceRef="Participant_Kunde" targetRef="E01" />
+    <bpmn:messageFlow id="Msg_in_E13" name="Gerät wird eingesendet" sourceRef="Participant_Kunde" targetRef="E13" />
+    <bpmn:messageFlow id="Msg_in_E19" name="Annahme / Ablehnung" sourceRef="Participant_Kunde" targetRef="E19" />
+    <bpmn:messageFlow id="Msg_out_E07" name="Lösung / Antwort" sourceRef="E07" targetRef="Participant_Kunde" />
+    <bpmn:messageFlow id="Msg_out_E12" name="Rücksendeinformation" sourceRef="E12" targetRef="Participant_Kunde" />
+    <bpmn:messageFlow id="Msg_out_E18" name="Angebot" sourceRef="E18" targetRef="Participant_Kunde" />
+    <bpmn:messageFlow id="Msg_out_E26" name="Gerät zurück" sourceRef="E26" targetRef="Participant_Kunde" />
+    <bpmn:messageFlow id="Msg_out_F04" name="Termin / ETA" sourceRef="F04" targetRef="Participant_Kunde" />
+    <bpmn:messageFlow id="Msg_out_B01" name="Rechnung" sourceRef="B01" targetRef="Participant_Kunde" />
+    <bpmn:messageFlow id="Msg_out_C01" name="Abschluss &amp; Feedbackanfrage" sourceRef="C01" targetRef="Participant_Kunde" />
+  </bpmn:collaboration>
+  <bpmn:process id="Process_E2E" name="E2E Serviceprozess End-to-End (SAP-Standard heute, mit In-House Service)" isExecutable="false">
+    <bpmn:documentation>Ganzheitlicher Serviceprozess vom ersten Kundenkontakt bis zum finanziellen Abschluss, wie ihn SAP heute im Standard abbildet: SAP Service Cloud V2 (Case Management), SAP S/4HANA Service (Garantie/Vertrag, Angebot, Serviceauftrag, In-House Service, Rückmeldung, Faktura), S/4HANA-Logistik (Retoure, Wareneingang, Auslieferung) und SAP Field Service Management (Disposition, mobile Durchführung). Die In-House-Strecke folgt In-House Service 2.0 (ab 2023 FPS02, Begriffe ab Release 2025).
+Abgrenzung: Reaktiver Service (Störung/Anfrage) mit zwei Abwicklungsarten: In-House Service (Gerät wird eingesendet) und Field Service (Einsatz vor Ort). Nicht im Detail: Serviceverträge/Wartungsplanung, Service with Advanced Execution (EAM), Intercompany – als Hinweise an den Schritten.</bpmn:documentation>
+    <bpmn:laneSet id="LaneSet_E2E">
+      <bpmn:lane id="Lane_L_CS" name="Kundenservice">
+        <bpmn:flowNodeRef>E01</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E02</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E03</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E04</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E05</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E06</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E07</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E08</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E09</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>G_DONE</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>C01</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_L_SALES" name="Service-Vertrieb">
+        <bpmn:flowNodeRef>E18</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E19</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_L_PLAN" name="Serviceplanung">
+        <bpmn:flowNodeRef>E10</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E11</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E12</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E15</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E16</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E17</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E20J</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E20</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E21</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E24</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E27</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>F01</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>F02</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>C02</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>C03</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_L_DISP" name="Disposition">
+        <bpmn:flowNodeRef>F03</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>F04</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_L_LOG" name="Logistik &amp; Wareneingang">
+        <bpmn:flowNodeRef>E13</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E14</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E26J</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E26</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>F08</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_L_TECH" name="Techniker (Werkstatt &amp; vor Ort)">
+        <bpmn:flowNodeRef>E22</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>E23</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>F05</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>F06</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>F07</bpmn:flowNodeRef>
+      </bpmn:lane>
+      <bpmn:lane id="Lane_L_FIN" name="Fakturierung &amp; Finanzen">
+        <bpmn:flowNodeRef>G_BILL</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>G_CHG</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>B01</bpmn:flowNodeRef>
+        <bpmn:flowNodeRef>B02</bpmn:flowNodeRef>
+      </bpmn:lane>
+    </bpmn:laneSet>
+    <bpmn:startEvent id="E01" name="Kundenanliegen geht ein">
+      <bpmn:documentation>Kunde meldet Störung oder Anfrage über Telefon, E-Mail, Chat oder Portal.
+Systeme: SAP Service Cloud V2, Kundenportal / Self-Service
+SAP-Agenten: Digital Service Agent (LAB_PREVIEW)
+Objekte: Interaktion
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:outgoing>Flow_f01</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="E01_def" />
+    </bpmn:startEvent>
+    <bpmn:startEvent id="E02" name="Zustandsmeldung (IoT / Monitoring)">
+      <bpmn:documentation>Zustandsbasierte Meldung aus IoT- oder Monitoringdaten (Condition-based Monitoring) löst einen Case bzw. eine Serviceanfrage aus.
+Systeme: SAP Service Cloud V2
+SAP-Agenten: Service Notification Initiation Agent (LAB_PREVIEW)
+Objekte: Meldung, Messwerte
+Hinweis: Kanal IoT laut V128 (Customer Service) und „Condition based monitoring“ (Kick-off). Konkretes Integrationsszenario je Produkt prüfen.
+Marker: SAP-Folien (TG)</bpmn:documentation>
+      <bpmn:outgoing>Flow_f02</bpmn:outgoing>
+      <bpmn:messageEventDefinition id="E02_def" />
+    </bpmn:startEvent>
+    <bpmn:userTask id="E03" name="Interaktion erfassen, Kunde &amp; Equipment identifizieren">
+      <bpmn:documentation>Service Agent erfasst die Interaktion im Customer Hub, identifiziert Kunde, Ansprechpartner und betroffenes Equipment (registriertes Produkt) und sieht die Historie.
+Systeme: SAP Service Cloud V2
+SAP-Agenten: Case Preparation Agent (LAB_PREVIEW), Sentiment / Topic Agent (LAB_PREVIEW), Equipment Insights Agent (LAB_PREVIEW), Equipment Enrichment Agent (LAB_PREVIEW)
+Objekte: Interaktion, Geschäftspartner, Equipment / Registriertes Produkt
+Apps: Customer Hub (Service Cloud V2)
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f01</bpmn:incoming>
+      <bpmn:outgoing>Flow_f03</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="E04" name="Case anlegen, klassifizieren &amp; priorisieren">
+      <bpmn:documentation>Case mit Kategorie, Priorität und SLA anlegen; Routing an das zuständige Team. Case-Kategorisierung kann aus historischen Cases gelernt werden.
+Systeme: SAP Service Cloud V2
+SAP-Agenten: Case Classification Agent (VERFUEGBAR), Case Preparation Agent (LAB_PREVIEW), Case Processing Agent (LAB_PREVIEW), Escalation Agent (LAB_PREVIEW), Sentiment / Topic Agent (LAB_PREVIEW)
+Objekte: Case, SLA
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f02</bpmn:incoming>
+      <bpmn:incoming>Flow_f03</bpmn:incoming>
+      <bpmn:outgoing>Flow_f04</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="E05" name="Lösung recherchieren (Wissen, Historie, Garantie)">
+      <bpmn:documentation>Wissensdatenbank, Case- und Gerätehistorie sowie Garantie-/Vertragsstatus prüfen; Antwort an den Kunden vorbereiten.
+Systeme: SAP Service Cloud V2
+SAP-Agenten: Case Summary (Joule) (VERFUEGBAR), Q&amp;A Agent (VERFUEGBAR), Case Processing Agent (LAB_PREVIEW), Case Action Recommendation Agent (LAB_PREVIEW), Knowledge Content Retrieval Agent (LAB_PREVIEW), Coaching Agent (LAB_PREVIEW)
+Objekte: Wissensartikel, Case-Historie
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f04</bpmn:incoming>
+      <bpmn:outgoing>Flow_f05</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="E06" name="Remote lösbar?" default="Flow_f07">
+      <bpmn:documentation>Kann das Anliegen ohne Serviceeinsatz gelöst werden?
+SAP-Agenten: Case Action Recommendation Agent (LAB_PREVIEW)
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f05</bpmn:incoming>
+      <bpmn:outgoing>Flow_f06</bpmn:outgoing>
+      <bpmn:outgoing>Flow_f07</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sendTask id="E07" name="Lösung mitteilen &amp; Case lösen">
+      <bpmn:documentation>Antwort bzw. Lösung an den Kunden senden, Case auf gelöst setzen.
+Systeme: SAP Service Cloud V2
+SAP-Agenten: Knowledge Creation Agent (VERFUEGBAR), Digital Service Agent (LAB_PREVIEW), Compliance Agent (LAB_PREVIEW)
+Objekte: Case, E-Mail
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f06</bpmn:incoming>
+      <bpmn:outgoing>Flow_f08</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:endEvent id="E08" name="Anliegen gelöst (First Contact Resolution)">
+      <bpmn:documentation>Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f08</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:userTask id="E09" name="Serviceeinsatz anstoßen (Folgebeleg in S/4HANA Service)">
+      <bpmn:documentation>Aus dem Case wird der Folgebeleg in S/4HANA Service vorbereitet (Serviceanfrage oder Serviceauftrag) – inkl. Kunde, Equipment, Schadensbild.
+Systeme: SAP Service Cloud V2, SAP S/4HANA Service (Cloud ERP)
+SAP-Agenten: Service Order Preparation Agent (LAB_PREVIEW), Service Notification Initiation Agent (LAB_PREVIEW)
+Objekte: Case, Serviceanfrage, Serviceauftrag
+Hinweis: Integrationsszenario Service Cloud V2 → S/4HANA Service (Folgebeleg aus Case) für die Zielrelease prüfen.
+Marker: Zu verifizieren</bpmn:documentation>
+      <bpmn:incoming>Flow_f07</bpmn:incoming>
+      <bpmn:outgoing>Flow_f09</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:businessRuleTask id="E10" name="Garantie &amp; Vertrag prüfen (Entitlement)">
+      <bpmn:documentation>Garantiefindung (Garantie-Prüfprofil, Mastergarantie am Equipment; ab 2025 FPS0 auch abgelaufene/datumsbasierte Garantien und Übersteuern) und Servicevertragsfindung (Auftraggeber, VkOrg/VtWeg, Gültigkeit) – bestimmt Kostenpflicht und Konditionen.
+Systeme: SAP S/4HANA Service (Cloud ERP)
+SAP-Agenten: Warranty Coverage Check Agent (LAB_PREVIEW), Service Contract Performance Agent (LAB_PREVIEW)
+Objekte: Garantie, Servicevertrag, Equipment
+Scope Items: 426 / 3MO (Serviceverträge)
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f09</bpmn:incoming>
+      <bpmn:outgoing>Flow_f10</bpmn:outgoing>
+    </bpmn:businessRuleTask>
+    <bpmn:exclusiveGateway id="E11" name="Abwicklungsart?">
+      <bpmn:documentation>In-House Service (Gerät wird eingesendet) oder Einsatz vor Ort (Field Service).
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f10</bpmn:incoming>
+      <bpmn:outgoing>Flow_f11</bpmn:outgoing>
+      <bpmn:outgoing>Flow_f12</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="E12" name="Retourenauftrag &amp; In-House Service anlegen">
+      <bpmn:documentation>Retourenauftrag mit Folgeaktivität „In-House Service fortführen“ und In-House Service mit Serviceobjekten anlegen (Massenaktionen möglich). Alternative: In-House Service entsteht automatisch beim Wareneingang/Prüfung oder beim Sichern eines Angebots mit Serviceobjekt.
+Systeme: SAP S/4HANA Service (Cloud ERP), SAP S/4HANA Logistik
+SAP-Agenten: In-House Service Processing Agent (GEPLANT), In-house service initiation (KI-Funktion) (VERFUEGBAR)
+Objekte: Retourenauftrag, In-House Service, Serviceobjekt
+Apps: Manage In-House Services, Manage In-House Service Objects
+Scope Items: 3XK (Public Cloud)
+Hinweis: Fiori-App-IDs (F7695 / F4025) in den Quellen widersprüchlich – im Fiori Apps Reference Library prüfen.
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f11</bpmn:incoming>
+      <bpmn:outgoing>Flow_f13</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:receiveTask id="E13" name="Gerät empfangen &amp; Wareneingang buchen">
+      <bpmn:documentation>Shipping Specialist bucht den Wareneingang zum Retourenauftrag; Kundenretouren können auf Kundensonderbestand gebucht werden (2025). Serviceobjekt: „Received by Service Center“.
+Systeme: SAP S/4HANA Logistik
+SAP-Agenten: In-House Service Processing Agent (GEPLANT), In-house service initiation (KI-Funktion) (VERFUEGBAR)
+Objekte: Retourenlieferung, Wareneingang, Kundensonderbestand
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f13</bpmn:incoming>
+      <bpmn:outgoing>Flow_f14</bpmn:outgoing>
+    </bpmn:receiveTask>
+    <bpmn:userTask id="E14" name="Eingangsprüfung (Inspection)">
+      <bpmn:documentation>Receiving Specialist prüft das Gerät; mit „Material Received“ und Prüfergebnis legt das System den In-House Service automatisch an. Transfer an ein anderes Service Center (auch Intercompany ab 2025 FPS1) möglich.
+Systeme: SAP S/4HANA Logistik, SAP S/4HANA Service (Cloud ERP)
+SAP-Agenten: Equipment Enrichment Agent (LAB_PREVIEW), In-House Service Processing Agent (GEPLANT)
+Objekte: Prüfergebnis, Serviceobjekt
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f14</bpmn:incoming>
+      <bpmn:outgoing>Flow_f15</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="E15" name="Vorprüfung (Precheck) je Serviceobjekt">
+      <bpmn:documentation>Je Serviceobjekt entscheiden: reparieren oder unrepariert an den Kunden zurück (dann kein Serviceauftrag). Kostenpflichtige Diagnose möglich.
+Systeme: SAP S/4HANA Service (Cloud ERP)
+SAP-Agenten: Equipment Insights Agent (LAB_PREVIEW)
+Objekte: Serviceobjekt
+Apps: Perform Prechecks
+Hinweis: Verschrottungs-/Austauschentscheidung als eigene Option in keiner Quelle gefunden (OFFEN).
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f15</bpmn:incoming>
+      <bpmn:outgoing>Flow_f16</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="E16" name="Ergebnis Vorprüfung?" default="Flow_f17">
+      <bpmn:documentation>Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f16</bpmn:incoming>
+      <bpmn:outgoing>Flow_f17</bpmn:outgoing>
+      <bpmn:outgoing>Flow_f18</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="E17" name="Kostenpflichtig?" default="Flow_f20">
+      <bpmn:documentation>Ergebnis der Garantie-/Vertragsprüfung.
+SAP-Agenten: Warranty Coverage Check Agent (LAB_PREVIEW)
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f17</bpmn:incoming>
+      <bpmn:outgoing>Flow_f19</bpmn:outgoing>
+      <bpmn:outgoing>Flow_f20</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="E18" name="Serviceangebot erstellen &amp; versenden">
+      <bpmn:documentation>Serviceangebot (Festpreis oder Aufwand, mit Versionen) für die Serviceobjekte erstellen; ist ein Serviceobjekt enthalten, wird der In-House-Service-Beleg beim Sichern verknüpft bzw. angelegt.
+Systeme: SAP S/4HANA Service (Cloud ERP)
+SAP-Agenten: Service Quotation Optimization Agent (GEPLANT), Service Scope Recommendation Agent (LAB_PREVIEW), Service Sales Agent (LAB_PREVIEW)
+Objekte: Serviceangebot, Festpreisvariante
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f19</bpmn:incoming>
+      <bpmn:outgoing>Flow_f21</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="E19" name="Angebot angenommen?" default="Flow_f22">
+      <bpmn:documentation>SAP-Agenten: Service Quotation Optimization Agent (GEPLANT)
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f21</bpmn:incoming>
+      <bpmn:outgoing>Flow_f22</bpmn:outgoing>
+      <bpmn:outgoing>Flow_f23</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="E20J" name="">
+      <bpmn:documentation>Zusammenführung
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f20</bpmn:incoming>
+      <bpmn:incoming>Flow_f22</bpmn:incoming>
+      <bpmn:outgoing>Flow_f24</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="E20" name="Serviceauftrag (Reparatur) anlegen, planen &amp; freigeben">
+      <bpmn:documentation>Je Serviceobjekt ein Serviceauftrag; Servicemitarbeiter, Termine und Ersatzteilpositionen planen, Auftrag freigeben. Alternative: Service with Advanced Execution (Ausführungsauftragsposition → abrechenbarer Instandhaltungsauftrag).
+Systeme: SAP S/4HANA Service (Cloud ERP)
+SAP-Agenten: Service Order Planning and Operations Agent (LAB_PREVIEW), Service Scope Recommendation Agent (LAB_PREVIEW), AI assisted Service Monitor (Operation Monitoring &amp; Resolution / Service Control Tower) (LAB_PREVIEW), Joule für Serviceaufträge (VERFUEGBAR), Service Template Agent (WIP)
+Objekte: Serviceauftrag, Serviceauftragsvorlage
+Apps: Manage Service Orders, Plan Repairs
+Scope Items: 3XK, 3D2
+Hinweis: App-Namen „Plan Repairs“/„Manage Service Orders“ je Release prüfen.
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f24</bpmn:incoming>
+      <bpmn:outgoing>Flow_f25</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="E21" name="Ersatzteile reservieren / beschaffen">
+      <bpmn:documentation>Bei Freigabe entsteht für Ersatzteilpositionen automatisch eine Bestellanforderung bzw. Reservierung.
+Systeme: SAP S/4HANA Service (Cloud ERP), SAP S/4HANA Logistik
+SAP-Agenten: Service Order Planning and Operations Agent (LAB_PREVIEW), Parts Logistics Monitor / Advance Shipment Monitor (WIP)
+Objekte: Reservierung, Bestellanforderung
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f25</bpmn:incoming>
+      <bpmn:outgoing>Flow_f26</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="E22" name="Reparatur in der Werkstatt durchführen">
+      <bpmn:documentation>Techniker im Service Center führt die Reparatur am Serviceobjekt aus (Serviceauftrag in S/4HANA; Ausführung in EAM bei Advanced Execution).
+Systeme: SAP S/4HANA Service (Cloud ERP)
+SAP-Agenten: Technician Briefing Agent (LAB_PREVIEW), Work Execution Agent (LAB_PREVIEW)
+Objekte: Serviceauftrag, Serviceobjekt
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f26</bpmn:incoming>
+      <bpmn:outgoing>Flow_f27</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="E23" name="Zeiten &amp; Material rückmelden">
+      <bpmn:documentation>Servicerückmeldung je Auftragsposition (Zeit, Ersatzteile, Spesen); Buchungen nach Controlling.
+Systeme: SAP S/4HANA Service (Cloud ERP)
+SAP-Agenten: Service Debriefing Agent (LAB_PREVIEW), Service Confirmation Agent (WIP)
+Objekte: Servicerückmeldung
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f27</bpmn:incoming>
+      <bpmn:outgoing>Flow_f28</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="E24" name="Abschließen &amp; zur Fakturierung freigeben">
+      <bpmn:documentation>Rückmeldungen prüfen, Serviceauftrag abschließen (nur abgeschlossene Aufträge sind fakturierbar), Freigabe zur Fakturierung – erzeugt die Fakturaanforderung.
+Systeme: SAP S/4HANA Service (Cloud ERP)
+SAP-Agenten: Billing Orchestration Agent (LAB_PREVIEW), Warranty Claim Agent (WIP)
+Objekte: Serviceauftrag, Fakturaanforderung
+Apps: Prepare for Billing
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f28</bpmn:incoming>
+      <bpmn:outgoing>Flow_f29</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="E26J" name="">
+      <bpmn:documentation>Zusammenführung
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f18</bpmn:incoming>
+      <bpmn:incoming>Flow_f23</bpmn:incoming>
+      <bpmn:incoming>Flow_f29</bpmn:incoming>
+      <bpmn:outgoing>Flow_f30</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="E26" name="Serviceobjekt zurücksenden (Auslieferung &amp; Warenausgang)">
+      <bpmn:documentation>Auslieferung zum Retourenauftrag anlegen (z. B. über „Prepare for Billing“) und Warenausgang buchen; Retourenauftrag ohne Erstattung (No Refund) abschließen.
+Systeme: SAP S/4HANA Logistik
+SAP-Agenten: In-House Service Processing Agent (GEPLANT)
+Objekte: Auslieferung, Warenausgang, Retourenauftrag
+Apps: Prepare for Billing
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f30</bpmn:incoming>
+      <bpmn:outgoing>Flow_f31</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="E27" name="Serviceobjekt &amp; In-House Service abschließen">
+      <bpmn:documentation>Serviceobjekt auf „Abgeschlossen“ setzen; In-House Service beenden.
+Systeme: SAP S/4HANA Service (Cloud ERP)
+SAP-Agenten: In-House Service Processing Agent (GEPLANT)
+Objekte: Serviceobjekt, In-House Service
+Apps: Manage In-House Service Objects
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f31</bpmn:incoming>
+      <bpmn:outgoing>Flow_f32</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="F01" name="Serviceauftrag anlegen &amp; freigeben">
+      <bpmn:documentation>Serviceauftrag (ggf. aus Serviceanfrage, Angebot, Vorlage oder Vertrag) mit Positionen anlegen und freigeben.
+Systeme: SAP S/4HANA Service (Cloud ERP)
+SAP-Agenten: Service Order Planning and Operations Agent (LAB_PREVIEW), Joule für Serviceaufträge (VERFUEGBAR), Service Template Agent (WIP)
+Objekte: Serviceauftrag, Serviceanfrage, Serviceauftragsvorlage
+Apps: Manage Service Orders
+Scope Items: 3D2
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f12</bpmn:incoming>
+      <bpmn:outgoing>Flow_f33</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="F02" name="Serviceauftrag an SAP FSM übertragen">
+      <bpmn:documentation>Freigegebener Serviceauftrag wird an SAP Field Service Management repliziert (Scope Item 49X, Zusatzlizenz FSM).
+Systeme: SAP S/4HANA Service (Cloud ERP), SAP Field Service Management
+Objekte: Serviceauftrag, Service Call / Aktivität (FSM)
+Scope Items: 49X
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f33</bpmn:incoming>
+      <bpmn:outgoing>Flow_f34</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="F03" name="Einsatz planen &amp; disponieren (Skills, Gebiet, Route)">
+      <bpmn:documentation>Disponent plant Einsätze auf der Plantafel nach Qualifikation, Gebiet, Auslastung und Route; Techniker und Termin gehen an S/4HANA zurück.
+Systeme: SAP Field Service Management
+SAP-Agenten: Service and Maintenance Workload and Capacity Optimization Agent (LAB_PREVIEW), Service and Maintenance Dispatching Agent (LAB_PREVIEW), Field Service Dispatcher Agent (VERFUEGBAR), Joule in SAP FSM (Disponent) (VERFUEGBAR), Scheduling Policy Management Agent (LAB_PREVIEW), Resource Reservations Management Agent (LAB_PREVIEW), Autonomous Crew Planner/Manager Agent (LAB_PREVIEW), AI assisted Service Monitor (Operation Monitoring &amp; Resolution / Service Control Tower) (LAB_PREVIEW)
+Objekte: Aktivität, Einsatz, Ressource
+Apps: Planning &amp; Dispatching Board (FSM)
+Scope Items: 49X
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f34</bpmn:incoming>
+      <bpmn:outgoing>Flow_f35</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:sendTask id="F04" name="Termin bestätigen &amp; Kunden informieren">
+      <bpmn:documentation>Kunde erhält Termin bzw. ETA des Technikers.
+Systeme: SAP Field Service Management, Kundenportal / Self-Service
+SAP-Agenten: Journey Agent (LAB_PREVIEW), Service and Maintenance Dispatching Agent (LAB_PREVIEW)
+Objekte: Termin
+Hinweis: Standard-Kundenbenachrichtigung aus FSM bzw. Portal je Produkt prüfen.
+Marker: Zu verifizieren</bpmn:documentation>
+      <bpmn:incoming>Flow_f35</bpmn:incoming>
+      <bpmn:outgoing>Flow_f36</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:userTask id="F05" name="Einsatz vorbereiten (Briefing, Teile an Bord)">
+      <bpmn:documentation>Techniker sichtet Auftrag, Historie, Besonderheiten beim Kunden und benötigte Teile.
+Systeme: SAP Field Service Management
+SAP-Agenten: Technician Briefing Agent (LAB_PREVIEW)
+Objekte: Aktivität, Equipment-Historie
+Apps: Field Service App (FSA)
+Marker: Abgeleitet</bpmn:documentation>
+      <bpmn:incoming>Flow_f36</bpmn:incoming>
+      <bpmn:outgoing>Flow_f37</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:userTask id="F06" name="Arbeit vor Ort durchführen &amp; dokumentieren">
+      <bpmn:documentation>Durchführung mit der mobilen App: Checklisten (Smartforms), Zeiten, Material, Unterschrift des Kunden.
+Systeme: SAP Field Service Management
+SAP-Agenten: Work Execution Agent (LAB_PREVIEW)
+Objekte: Aktivität, Checkliste, Zeitrückmeldung, Materialrückmeldung
+Apps: Field Service App (FSA)
+Scope Items: 49X
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f37</bpmn:incoming>
+      <bpmn:outgoing>Flow_f38</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="F07" name="Rückmeldung an S/4HANA (Servicerückmeldung)">
+      <bpmn:documentation>FSM-Rückmeldung (Zeit, Spesen, Material) erzeugt die Servicerückmeldung in S/4HANA; Folgebelege für CO, Warenbewegung und Fakturaanforderung.
+Systeme: SAP Field Service Management, SAP S/4HANA Service (Cloud ERP)
+SAP-Agenten: Service Debriefing Agent (LAB_PREVIEW), Service Confirmation Agent (WIP)
+Objekte: Servicerückmeldung
+Scope Items: 49X
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f38</bpmn:incoming>
+      <bpmn:outgoing>Flow_f39</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:userTask id="F08" name="Ersatz- und Altteile zurückführen">
+      <bpmn:documentation>Nicht verbaute Ersatzteile bzw. Altteile werden ins Lager zurückgeführt (optional).
+Systeme: SAP S/4HANA Logistik
+SAP-Agenten: Service Parts Return Agent (LAB_PREVIEW)
+Objekte: Rücklieferung, Umbuchung
+Marker: Abgeleitet</bpmn:documentation>
+      <bpmn:incoming>Flow_f39</bpmn:incoming>
+      <bpmn:outgoing>Flow_f40</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:exclusiveGateway id="G_BILL" name="">
+      <bpmn:documentation>Zusammenführung In-House / Field Service
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f32</bpmn:incoming>
+      <bpmn:incoming>Flow_f40</bpmn:incoming>
+      <bpmn:outgoing>Flow_f41</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:exclusiveGateway id="G_CHG" name="Kostenpflichtige Leistung?" default="Flow_f43">
+      <bpmn:documentation>Garantie, Vertrag oder unreparierte Rücksendung führen zu keiner (oder nur einer Diagnose-)Faktura.
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f41</bpmn:incoming>
+      <bpmn:outgoing>Flow_f42</bpmn:outgoing>
+      <bpmn:outgoing>Flow_f43</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:userTask id="B01" name="Fakturaanforderung prüfen &amp; Faktura erstellen">
+      <bpmn:documentation>Fakturaanforderung (Billing Document Request) prüfen und Faktura erzeugen; Festpreis aus dem Serviceauftrag oder aufwandsbezogen (bei Advanced Execution über DIP).
+Systeme: SAP S/4HANA Service (Cloud ERP)
+SAP-Agenten: Billing Orchestration Agent (LAB_PREVIEW)
+Objekte: Fakturaanforderung, Faktura
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f42</bpmn:incoming>
+      <bpmn:outgoing>Flow_f44</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:serviceTask id="B02" name="Kosten &amp; Erlöse abrechnen">
+      <bpmn:documentation>Kosten und Erlöse in Controlling bzw. Ergebnisrechnung; bei positionsbezogener Kontierung Erlösrealisierung je Auftragsposition.
+Systeme: SAP S/4HANA Service (Cloud ERP)
+SAP-Agenten: Settlement Agent (LAB_PREVIEW)
+Objekte: Kosten, Erlöse, Ergebnisrechnung
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f44</bpmn:incoming>
+      <bpmn:outgoing>Flow_f45</bpmn:outgoing>
+    </bpmn:serviceTask>
+    <bpmn:exclusiveGateway id="G_DONE" name="">
+      <bpmn:documentation>Zusammenführung
+Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f43</bpmn:incoming>
+      <bpmn:incoming>Flow_f45</bpmn:incoming>
+      <bpmn:outgoing>Flow_f46</bpmn:outgoing>
+    </bpmn:exclusiveGateway>
+    <bpmn:sendTask id="C01" name="Case abschließen &amp; Kunden informieren">
+      <bpmn:documentation>Case schließen, Kunde über Ergebnis informieren und Feedback einholen.
+Systeme: SAP Service Cloud V2
+SAP-Agenten: Journey Agent (LAB_PREVIEW)
+Objekte: Case, Umfrage
+Marker: Abgeleitet</bpmn:documentation>
+      <bpmn:incoming>Flow_f46</bpmn:incoming>
+      <bpmn:outgoing>Flow_f47</bpmn:outgoing>
+    </bpmn:sendTask>
+    <bpmn:userTask id="C02" name="Service auswerten: Qualität, Profitabilität, Folgegeschäft">
+      <bpmn:documentation>Auswertung von Qualität, Profitabilität und Wiederholfehlern; Wissen sichern; Folgegeschäft (Austausch, Wartungsvertrag) anstoßen.
+Systeme: SAP S/4HANA Service (Cloud ERP), SAP Service Cloud V2
+SAP-Agenten: Knowledge Creation Agent (VERFUEGBAR), Knowledge Content Administration Agent (LAB_PREVIEW), Service Sales Agent (LAB_PREVIEW), Service Contract Lifecycle Renewal Agent (LAB_PREVIEW), Service Contract Performance Agent (LAB_PREVIEW), Maintenance Plan Creation Agent (LAB_PREVIEW), AI assisted Service Monitor (Operation Monitoring &amp; Resolution / Service Control Tower) (LAB_PREVIEW)
+Objekte: Auswertung, Opportunity, Wartungsplan
+Scope Items: 43B (Service Monitoring and Analytics)
+Marker: Abgeleitet</bpmn:documentation>
+      <bpmn:incoming>Flow_f47</bpmn:incoming>
+      <bpmn:outgoing>Flow_f48</bpmn:outgoing>
+    </bpmn:userTask>
+    <bpmn:endEvent id="C03" name="Service abgeschlossen">
+      <bpmn:documentation>Marker: SAP-Standard</bpmn:documentation>
+      <bpmn:incoming>Flow_f48</bpmn:incoming>
+    </bpmn:endEvent>
+    <bpmn:sequenceFlow id="Flow_f01" sourceRef="E01" targetRef="E03" />
+    <bpmn:sequenceFlow id="Flow_f02" sourceRef="E02" targetRef="E04" />
+    <bpmn:sequenceFlow id="Flow_f03" sourceRef="E03" targetRef="E04" />
+    <bpmn:sequenceFlow id="Flow_f04" sourceRef="E04" targetRef="E05" />
+    <bpmn:sequenceFlow id="Flow_f05" sourceRef="E05" targetRef="E06" />
+    <bpmn:sequenceFlow id="Flow_f06" sourceRef="E06" targetRef="E07" name="ja" />
+    <bpmn:sequenceFlow id="Flow_f07" sourceRef="E06" targetRef="E09" name="nein" />
+    <bpmn:sequenceFlow id="Flow_f08" sourceRef="E07" targetRef="E08" />
+    <bpmn:sequenceFlow id="Flow_f09" sourceRef="E09" targetRef="E10" />
+    <bpmn:sequenceFlow id="Flow_f10" sourceRef="E10" targetRef="E11" />
+    <bpmn:sequenceFlow id="Flow_f11" sourceRef="E11" targetRef="E12" name="In-House" />
+    <bpmn:sequenceFlow id="Flow_f12" sourceRef="E11" targetRef="F01" name="vor Ort" />
+    <bpmn:sequenceFlow id="Flow_f13" sourceRef="E12" targetRef="E13" />
+    <bpmn:sequenceFlow id="Flow_f14" sourceRef="E13" targetRef="E14" />
+    <bpmn:sequenceFlow id="Flow_f15" sourceRef="E14" targetRef="E15" />
+    <bpmn:sequenceFlow id="Flow_f16" sourceRef="E15" targetRef="E16" />
+    <bpmn:sequenceFlow id="Flow_f17" sourceRef="E16" targetRef="E17" name="reparieren" />
+    <bpmn:sequenceFlow id="Flow_f18" sourceRef="E16" targetRef="E26J" name="unrepariert zurück" />
+    <bpmn:sequenceFlow id="Flow_f19" sourceRef="E17" targetRef="E18" name="kostenpflichtig" />
+    <bpmn:sequenceFlow id="Flow_f20" sourceRef="E17" targetRef="E20J" name="Garantie / Vertrag" />
+    <bpmn:sequenceFlow id="Flow_f21" sourceRef="E18" targetRef="E19" />
+    <bpmn:sequenceFlow id="Flow_f22" sourceRef="E19" targetRef="E20J" name="angenommen" />
+    <bpmn:sequenceFlow id="Flow_f23" sourceRef="E19" targetRef="E26J" name="abgelehnt" />
+    <bpmn:sequenceFlow id="Flow_f24" sourceRef="E20J" targetRef="E20" />
+    <bpmn:sequenceFlow id="Flow_f25" sourceRef="E20" targetRef="E21" />
+    <bpmn:sequenceFlow id="Flow_f26" sourceRef="E21" targetRef="E22" />
+    <bpmn:sequenceFlow id="Flow_f27" sourceRef="E22" targetRef="E23" />
+    <bpmn:sequenceFlow id="Flow_f28" sourceRef="E23" targetRef="E24" />
+    <bpmn:sequenceFlow id="Flow_f29" sourceRef="E24" targetRef="E26J" />
+    <bpmn:sequenceFlow id="Flow_f30" sourceRef="E26J" targetRef="E26" />
+    <bpmn:sequenceFlow id="Flow_f31" sourceRef="E26" targetRef="E27" />
+    <bpmn:sequenceFlow id="Flow_f32" sourceRef="E27" targetRef="G_BILL" />
+    <bpmn:sequenceFlow id="Flow_f33" sourceRef="F01" targetRef="F02" />
+    <bpmn:sequenceFlow id="Flow_f34" sourceRef="F02" targetRef="F03" />
+    <bpmn:sequenceFlow id="Flow_f35" sourceRef="F03" targetRef="F04" />
+    <bpmn:sequenceFlow id="Flow_f36" sourceRef="F04" targetRef="F05" />
+    <bpmn:sequenceFlow id="Flow_f37" sourceRef="F05" targetRef="F06" />
+    <bpmn:sequenceFlow id="Flow_f38" sourceRef="F06" targetRef="F07" />
+    <bpmn:sequenceFlow id="Flow_f39" sourceRef="F07" targetRef="F08" />
+    <bpmn:sequenceFlow id="Flow_f40" sourceRef="F08" targetRef="G_BILL" />
+    <bpmn:sequenceFlow id="Flow_f41" sourceRef="G_BILL" targetRef="G_CHG" />
+    <bpmn:sequenceFlow id="Flow_f42" sourceRef="G_CHG" targetRef="B01" name="ja" />
+    <bpmn:sequenceFlow id="Flow_f43" sourceRef="G_CHG" targetRef="G_DONE" name="nein" />
+    <bpmn:sequenceFlow id="Flow_f44" sourceRef="B01" targetRef="B02" />
+    <bpmn:sequenceFlow id="Flow_f45" sourceRef="B02" targetRef="G_DONE" />
+    <bpmn:sequenceFlow id="Flow_f46" sourceRef="G_DONE" targetRef="C01" />
+    <bpmn:sequenceFlow id="Flow_f47" sourceRef="C01" targetRef="C02" />
+    <bpmn:sequenceFlow id="Flow_f48" sourceRef="C02" targetRef="C03" />
+  </bpmn:process>
+  <bpmndi:BPMNDiagram id="Diagram_E2E">
+    <bpmndi:BPMNPlane id="Plane_E2E" bpmnElement="Collaboration_E2E">
+      <bpmndi:BPMNShape id="Participant_Kunde_di" bpmnElement="Participant_Kunde" isHorizontal="true">
+        <dc:Bounds x="0" y="0" width="5855" height="70" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Participant_Main_di" bpmnElement="Participant_Main" isHorizontal="true">
+        <dc:Bounds x="0" y="140" width="5855" height="1202" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_L_CS_di" bpmnElement="Lane_L_CS" isHorizontal="true">
+        <dc:Bounds x="30" y="140" width="5825" height="256" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_L_SALES_di" bpmnElement="Lane_L_SALES" isHorizontal="true">
+        <dc:Bounds x="30" y="396" width="5825" height="138" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_L_PLAN_di" bpmnElement="Lane_L_PLAN" isHorizontal="true">
+        <dc:Bounds x="30" y="534" width="5825" height="256" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_L_DISP_di" bpmnElement="Lane_L_DISP" isHorizontal="true">
+        <dc:Bounds x="30" y="790" width="5825" height="138" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_L_LOG_di" bpmnElement="Lane_L_LOG" isHorizontal="true">
+        <dc:Bounds x="30" y="928" width="5825" height="138" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_L_TECH_di" bpmnElement="Lane_L_TECH" isHorizontal="true">
+        <dc:Bounds x="30" y="1066" width="5825" height="138" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="Lane_L_FIN_di" bpmnElement="Lane_L_FIN" isHorizontal="true">
+        <dc:Bounds x="30" y="1204" width="5825" height="138" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E01_di" bpmnElement="E01">
+        <dc:Bounds x="127" y="186" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="85" y="226" width="120" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E02_di" bpmnElement="E02">
+        <dc:Bounds x="127" y="314" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="85" y="354" width="120" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E03_di" bpmnElement="E03">
+        <dc:Bounds x="258" y="162" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E04_di" bpmnElement="E04">
+        <dc:Bounds x="433" y="162" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E05_di" bpmnElement="E05">
+        <dc:Bounds x="608" y="162" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E06_di" bpmnElement="E06" isMarkerVisible="true">
+        <dc:Bounds x="820" y="179" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="785" y="139" width="120" height="34" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E07_di" bpmnElement="E07">
+        <dc:Bounds x="958" y="162" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E08_di" bpmnElement="E08">
+        <dc:Bounds x="1177" y="186" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1135" y="226" width="120" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E09_di" bpmnElement="E09">
+        <dc:Bounds x="958" y="290" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E10_di" bpmnElement="E10">
+        <dc:Bounds x="1133" y="556" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E11_di" bpmnElement="E11" isMarkerVisible="true">
+        <dc:Bounds x="1345" y="573" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1310" y="533" width="120" height="34" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E12_di" bpmnElement="E12">
+        <dc:Bounds x="1483" y="556" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E13_di" bpmnElement="E13">
+        <dc:Bounds x="1658" y="955" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E14_di" bpmnElement="E14">
+        <dc:Bounds x="1833" y="955" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E15_di" bpmnElement="E15">
+        <dc:Bounds x="2008" y="556" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E16_di" bpmnElement="E16" isMarkerVisible="true">
+        <dc:Bounds x="2220" y="573" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2185" y="533" width="120" height="34" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E17_di" bpmnElement="E17" isMarkerVisible="true">
+        <dc:Bounds x="2395" y="573" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2360" y="533" width="120" height="34" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E18_di" bpmnElement="E18">
+        <dc:Bounds x="2533" y="423" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E19_di" bpmnElement="E19" isMarkerVisible="true">
+        <dc:Bounds x="2745" y="440" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2710" y="400" width="120" height="34" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E20J_di" bpmnElement="E20J" isMarkerVisible="true">
+        <dc:Bounds x="2920" y="573" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2885" y="533" width="120" height="34" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E20_di" bpmnElement="E20">
+        <dc:Bounds x="3058" y="556" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E21_di" bpmnElement="E21">
+        <dc:Bounds x="3233" y="556" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E22_di" bpmnElement="E22">
+        <dc:Bounds x="3408" y="1093" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E23_di" bpmnElement="E23">
+        <dc:Bounds x="3583" y="1093" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E24_di" bpmnElement="E24">
+        <dc:Bounds x="3758" y="556" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E26J_di" bpmnElement="E26J" isMarkerVisible="true">
+        <dc:Bounds x="3970" y="972" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="3935" y="932" width="120" height="34" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E26_di" bpmnElement="E26">
+        <dc:Bounds x="4108" y="955" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="E27_di" bpmnElement="E27">
+        <dc:Bounds x="4283" y="556" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="F01_di" bpmnElement="F01">
+        <dc:Bounds x="1483" y="684" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="F02_di" bpmnElement="F02">
+        <dc:Bounds x="1658" y="556" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="F03_di" bpmnElement="F03">
+        <dc:Bounds x="1833" y="817" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="F04_di" bpmnElement="F04">
+        <dc:Bounds x="2008" y="817" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="F05_di" bpmnElement="F05">
+        <dc:Bounds x="2183" y="1093" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="F06_di" bpmnElement="F06">
+        <dc:Bounds x="2358" y="1093" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="F07_di" bpmnElement="F07">
+        <dc:Bounds x="2533" y="1093" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="F08_di" bpmnElement="F08">
+        <dc:Bounds x="2708" y="955" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="G_BILL_di" bpmnElement="G_BILL" isMarkerVisible="true">
+        <dc:Bounds x="4495" y="1248" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="4460" y="1208" width="120" height="34" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="G_CHG_di" bpmnElement="G_CHG" isMarkerVisible="true">
+        <dc:Bounds x="4670" y="1248" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="4635" y="1208" width="120" height="34" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="B01_di" bpmnElement="B01">
+        <dc:Bounds x="4808" y="1231" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="B02_di" bpmnElement="B02">
+        <dc:Bounds x="4983" y="1231" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="G_DONE_di" bpmnElement="G_DONE" isMarkerVisible="true">
+        <dc:Bounds x="5195" y="179" width="50" height="50" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="5160" y="139" width="120" height="34" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="C01_di" bpmnElement="C01">
+        <dc:Bounds x="5333" y="162" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="C02_di" bpmnElement="C02">
+        <dc:Bounds x="5508" y="556" width="124" height="84" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="C03_di" bpmnElement="C03">
+        <dc:Bounds x="5727" y="580" width="36" height="36" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="5685" y="620" width="120" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNEdge id="Flow_f01_di" bpmnElement="Flow_f01">
+        <di:waypoint x="163" y="204" />
+        <di:waypoint x="258" y="204" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f02_di" bpmnElement="Flow_f02">
+        <di:waypoint x="163" y="332" />
+        <di:waypoint x="298" y="332" />
+        <di:waypoint x="298" y="204" />
+        <di:waypoint x="433" y="204" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f03_di" bpmnElement="Flow_f03">
+        <di:waypoint x="382" y="204" />
+        <di:waypoint x="433" y="204" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f04_di" bpmnElement="Flow_f04">
+        <di:waypoint x="557" y="204" />
+        <di:waypoint x="608" y="204" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f05_di" bpmnElement="Flow_f05">
+        <di:waypoint x="732" y="204" />
+        <di:waypoint x="820" y="204" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f06_di" bpmnElement="Flow_f06">
+        <di:waypoint x="870" y="204" />
+        <di:waypoint x="958" y="204" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="876" y="174" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f07_di" bpmnElement="Flow_f07">
+        <di:waypoint x="845" y="229" />
+        <di:waypoint x="845" y="332" />
+        <di:waypoint x="958" y="332" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="851" y="233" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f08_di" bpmnElement="Flow_f08">
+        <di:waypoint x="1082" y="204" />
+        <di:waypoint x="1177" y="204" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f09_di" bpmnElement="Flow_f09">
+        <di:waypoint x="1082" y="332" />
+        <di:waypoint x="1108" y="332" />
+        <di:waypoint x="1108" y="598" />
+        <di:waypoint x="1133" y="598" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f10_di" bpmnElement="Flow_f10">
+        <di:waypoint x="1257" y="598" />
+        <di:waypoint x="1345" y="598" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f11_di" bpmnElement="Flow_f11">
+        <di:waypoint x="1395" y="598" />
+        <di:waypoint x="1483" y="598" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1401" y="568" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f12_di" bpmnElement="Flow_f12">
+        <di:waypoint x="1370" y="623" />
+        <di:waypoint x="1370" y="726" />
+        <di:waypoint x="1483" y="726" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1376" y="627" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f13_di" bpmnElement="Flow_f13">
+        <di:waypoint x="1607" y="598" />
+        <di:waypoint x="1633" y="598" />
+        <di:waypoint x="1633" y="997" />
+        <di:waypoint x="1658" y="997" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f14_di" bpmnElement="Flow_f14">
+        <di:waypoint x="1782" y="997" />
+        <di:waypoint x="1833" y="997" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f15_di" bpmnElement="Flow_f15">
+        <di:waypoint x="1957" y="997" />
+        <di:waypoint x="1983" y="997" />
+        <di:waypoint x="1983" y="598" />
+        <di:waypoint x="2008" y="598" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f16_di" bpmnElement="Flow_f16">
+        <di:waypoint x="2132" y="598" />
+        <di:waypoint x="2220" y="598" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f17_di" bpmnElement="Flow_f17">
+        <di:waypoint x="2270" y="598" />
+        <di:waypoint x="2395" y="598" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2276" y="568" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f18_di" bpmnElement="Flow_f18">
+        <di:waypoint x="2245" y="623" />
+        <di:waypoint x="2245" y="997" />
+        <di:waypoint x="3970" y="997" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2251" y="627" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f19_di" bpmnElement="Flow_f19">
+        <di:waypoint x="2420" y="573" />
+        <di:waypoint x="2420" y="465" />
+        <di:waypoint x="2533" y="465" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2426" y="543" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f20_di" bpmnElement="Flow_f20">
+        <di:waypoint x="2445" y="598" />
+        <di:waypoint x="2920" y="598" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2451" y="568" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f21_di" bpmnElement="Flow_f21">
+        <di:waypoint x="2657" y="465" />
+        <di:waypoint x="2745" y="465" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f22_di" bpmnElement="Flow_f22">
+        <di:waypoint x="2770" y="490" />
+        <di:waypoint x="2770" y="598" />
+        <di:waypoint x="2920" y="598" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2776" y="494" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f23_di" bpmnElement="Flow_f23">
+        <di:waypoint x="2770" y="490" />
+        <di:waypoint x="2770" y="997" />
+        <di:waypoint x="3970" y="997" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2776" y="494" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f24_di" bpmnElement="Flow_f24">
+        <di:waypoint x="2970" y="598" />
+        <di:waypoint x="3058" y="598" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f25_di" bpmnElement="Flow_f25">
+        <di:waypoint x="3182" y="598" />
+        <di:waypoint x="3233" y="598" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f26_di" bpmnElement="Flow_f26">
+        <di:waypoint x="3357" y="598" />
+        <di:waypoint x="3383" y="598" />
+        <di:waypoint x="3383" y="1135" />
+        <di:waypoint x="3408" y="1135" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f27_di" bpmnElement="Flow_f27">
+        <di:waypoint x="3532" y="1135" />
+        <di:waypoint x="3583" y="1135" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f28_di" bpmnElement="Flow_f28">
+        <di:waypoint x="3707" y="1135" />
+        <di:waypoint x="3733" y="1135" />
+        <di:waypoint x="3733" y="598" />
+        <di:waypoint x="3758" y="598" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f29_di" bpmnElement="Flow_f29">
+        <di:waypoint x="3882" y="598" />
+        <di:waypoint x="3995" y="598" />
+        <di:waypoint x="3995" y="972" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f30_di" bpmnElement="Flow_f30">
+        <di:waypoint x="4020" y="997" />
+        <di:waypoint x="4108" y="997" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f31_di" bpmnElement="Flow_f31">
+        <di:waypoint x="4232" y="997" />
+        <di:waypoint x="4258" y="997" />
+        <di:waypoint x="4258" y="598" />
+        <di:waypoint x="4283" y="598" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f32_di" bpmnElement="Flow_f32">
+        <di:waypoint x="4407" y="598" />
+        <di:waypoint x="4520" y="598" />
+        <di:waypoint x="4520" y="1248" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f33_di" bpmnElement="Flow_f33">
+        <di:waypoint x="1607" y="726" />
+        <di:waypoint x="1633" y="726" />
+        <di:waypoint x="1633" y="598" />
+        <di:waypoint x="1658" y="598" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f34_di" bpmnElement="Flow_f34">
+        <di:waypoint x="1782" y="598" />
+        <di:waypoint x="1808" y="598" />
+        <di:waypoint x="1808" y="859" />
+        <di:waypoint x="1833" y="859" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f35_di" bpmnElement="Flow_f35">
+        <di:waypoint x="1957" y="859" />
+        <di:waypoint x="2008" y="859" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f36_di" bpmnElement="Flow_f36">
+        <di:waypoint x="2132" y="859" />
+        <di:waypoint x="2158" y="859" />
+        <di:waypoint x="2158" y="1135" />
+        <di:waypoint x="2183" y="1135" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f37_di" bpmnElement="Flow_f37">
+        <di:waypoint x="2307" y="1135" />
+        <di:waypoint x="2358" y="1135" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f38_di" bpmnElement="Flow_f38">
+        <di:waypoint x="2482" y="1135" />
+        <di:waypoint x="2533" y="1135" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f39_di" bpmnElement="Flow_f39">
+        <di:waypoint x="2657" y="1135" />
+        <di:waypoint x="2683" y="1135" />
+        <di:waypoint x="2683" y="997" />
+        <di:waypoint x="2708" y="997" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f40_di" bpmnElement="Flow_f40">
+        <di:waypoint x="2832" y="997" />
+        <di:waypoint x="4520" y="997" />
+        <di:waypoint x="4520" y="1248" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f41_di" bpmnElement="Flow_f41">
+        <di:waypoint x="4545" y="1273" />
+        <di:waypoint x="4670" y="1273" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f42_di" bpmnElement="Flow_f42">
+        <di:waypoint x="4720" y="1273" />
+        <di:waypoint x="4808" y="1273" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="4726" y="1243" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f43_di" bpmnElement="Flow_f43">
+        <di:waypoint x="4695" y="1248" />
+        <di:waypoint x="4695" y="204" />
+        <di:waypoint x="5195" y="204" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="4701" y="1218" width="90" height="27" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f44_di" bpmnElement="Flow_f44">
+        <di:waypoint x="4932" y="1273" />
+        <di:waypoint x="4983" y="1273" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f45_di" bpmnElement="Flow_f45">
+        <di:waypoint x="5107" y="1273" />
+        <di:waypoint x="5220" y="1273" />
+        <di:waypoint x="5220" y="229" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f46_di" bpmnElement="Flow_f46">
+        <di:waypoint x="5245" y="204" />
+        <di:waypoint x="5333" y="204" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f47_di" bpmnElement="Flow_f47">
+        <di:waypoint x="5457" y="204" />
+        <di:waypoint x="5483" y="204" />
+        <di:waypoint x="5483" y="598" />
+        <di:waypoint x="5508" y="598" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Flow_f48_di" bpmnElement="Flow_f48">
+        <di:waypoint x="5632" y="598" />
+        <di:waypoint x="5727" y="598" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_in_E01_di" bpmnElement="Msg_in_E01">
+        <di:waypoint x="137" y="70" />
+        <di:waypoint x="137" y="186" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="45" y="76" width="86" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_in_E13_di" bpmnElement="Msg_in_E13">
+        <di:waypoint x="1712" y="70" />
+        <di:waypoint x="1712" y="955" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1620" y="76" width="86" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_in_E19_di" bpmnElement="Msg_in_E19">
+        <di:waypoint x="2762" y="70" />
+        <di:waypoint x="2762" y="440" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2670" y="76" width="86" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_out_E07_di" bpmnElement="Msg_out_E07">
+        <di:waypoint x="1028" y="162" />
+        <di:waypoint x="1028" y="70" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1032" y="76" width="86" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_out_E12_di" bpmnElement="Msg_out_E12">
+        <di:waypoint x="1553" y="556" />
+        <di:waypoint x="1553" y="70" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="1557" y="76" width="86" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_out_E18_di" bpmnElement="Msg_out_E18">
+        <di:waypoint x="2603" y="423" />
+        <di:waypoint x="2603" y="70" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2607" y="76" width="86" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_out_E26_di" bpmnElement="Msg_out_E26">
+        <di:waypoint x="4178" y="955" />
+        <di:waypoint x="4178" y="70" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="4182" y="76" width="86" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_out_F04_di" bpmnElement="Msg_out_F04">
+        <di:waypoint x="2078" y="817" />
+        <di:waypoint x="2078" y="70" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="2082" y="76" width="86" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_out_B01_di" bpmnElement="Msg_out_B01">
+        <di:waypoint x="4878" y="1231" />
+        <di:waypoint x="4878" y="70" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="4882" y="76" width="86" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="Msg_out_C01_di" bpmnElement="Msg_out_C01">
+        <di:waypoint x="5403" y="162" />
+        <di:waypoint x="5403" y="70" />
+        <bpmndi:BPMNLabel>
+          <dc:Bounds x="5407" y="76" width="86" height="40" />
+        </bpmndi:BPMNLabel>
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</bpmn:definitions>

@@ -5,7 +5,9 @@ import react from '@vitejs/plugin-react';
 const root = fileURLToPath(new URL('.', import.meta.url));
 
 export default defineConfig(({ mode }) => {
-  const isStatic = mode === 'static';
+  // static: dist-static/ mit relativen Pfaden · artifact: eine Datei für das Claude-Artifact (scripts/inline-artifact.ts)
+  const isArtifact = mode === 'artifact';
+  const isStatic = mode === 'static' || isArtifact;
   return {
     root: 'web',
     base: isStatic ? './' : '/',
@@ -25,10 +27,12 @@ export default defineConfig(({ mode }) => {
       fs: { allow: [root] },
     },
     build: {
-      outDir: isStatic ? `${root}dist-static` : `${root}dist`,
+      outDir: isArtifact ? `${root}dist-artifact` : isStatic ? `${root}dist-static` : `${root}dist`,
       emptyOutDir: true,
       chunkSizeWarningLimit: 6000,
-      assetsInlineLimit: 0,
+      assetsInlineLimit: isArtifact ? 100_000_000 : 0,
+      cssCodeSplit: !isArtifact,
+      rolldownOptions: isArtifact ? { output: { codeSplitting: false } } : undefined,
     },
   };
 });

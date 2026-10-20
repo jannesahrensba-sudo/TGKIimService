@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "tg-ki-im-service": {
+      "command": "npx",
+      "args": ["tsx", "src/mcp/tg-server.ts"],
+      "env": { "MCP_ACTOR": "Claude Code" }
+    }
+  }
+}

@@ -44,7 +44,7 @@ export function requirementsCsv(m: TgModel, list: Requirement[] = m.requirements
       rv.sapFeedback ?? '',
     ].map(cell);
   });
-  return `﻿${[head.map(cell), ...rows].map((r) => r.join(';')).join('\r\n')}\r\n`;
+  return `\ufeff${[head.map(cell), ...rows].map((r) => r.join(';')).join('\r\n')}\r\n`;
 }
 
 /** Übergabepaket an SAP: priorisierte bzw. übergebene Anforderungen mit Abgleich (Phase 3) */
