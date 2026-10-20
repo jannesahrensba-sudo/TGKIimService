@@ -34,8 +34,8 @@ export interface ProcessLayout {
 }
 
 const COL_W = 175;
-const ROW_H = 130;
-const LANE_MIN_H = 150;
+const ROW_H = 118;
+const LANE_MIN_H = 128;
 const POOL_LABEL = 30;
 const LANE_LABEL = 30;
 const FIRST_COL_CENTER = POOL_LABEL + LANE_LABEL + 85;
