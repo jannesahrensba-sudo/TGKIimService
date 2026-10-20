@@ -1,0 +1,44 @@
+[
+  {
+    "id": "GAP-01", "title": "Vorprüfung: Reparieren, unrepariert zurück – oder austauschen/verschrotten?", "nodeIds": ["E15", "E16"],
+    "description": "Die Vorprüfung ist der zentrale Entscheidungspunkt im In-House Service. Weder im Kick-off- noch im V128-Stand ist ein Agent genannt, der die Entscheidung vorbereitet (Schadensbild, Gerätealter, Reparatur- vs. Austauschkosten, Garantie). Equipment Insights liefert nur Teilinformationen; eine Austausch-/Verschrottungsoption ist im Standard nicht belegt.",
+    "proposedAgent": "Vorprüfungs-Agent (Repair-or-Replace): schlägt je Serviceobjekt Reparieren / Austausch / unrepariert zurück mit Begründung vor; Entscheidung bleibt beim Service Planner.",
+    "benefit": "Schnellere, konsistente Vorprüfung; weniger unwirtschaftliche Reparaturen.", "requirementIds": [], "status": "IDENTIFIZIERT", "origin": "RECHERCHE", "marker": "ABGELEITET", "createdBy": "Plattform (Recherche)", "createdAt": "2026-10-20"
+  },
+  {
+    "id": "GAP-02", "title": "Proaktiver Kundenstatus in der In-House-Strecke", "nodeIds": ["E13", "E15", "E22", "E26"],
+    "description": "SAP nennt „Instant transparency, proactive communication“ als Ziel. Der Journey Agent ist nur an Terminbestätigung und Abschluss verortet; für Eingang, Vorprüfung, Reparatur und Rückversand des eingesendeten Geräts ist kein Agent genannt, der den Kunden informiert.",
+    "proposedAgent": "Status-Agent In-House: informiert den Kunden ereignisgesteuert (Eingang bestätigt, Befund, Reparatur fertig, Versand mit Sendungsnummer).",
+    "benefit": "Weniger Statusanfragen im Kundenservice; Transparenz für den Kunden.", "requirementIds": [], "status": "IDENTIFIZIERT", "origin": "RECHERCHE", "marker": "ABGELEITET", "createdBy": "Plattform (Recherche)", "createdAt": "2026-10-20"
+  },
+  {
+    "id": "GAP-03", "title": "Diagnose-Unterstützung für Werkstatt-Techniker (In-House)", "nodeIds": ["E22"],
+    "description": "Technician Briefing und Work Execution Agent sind im Field Service (FSA) verortet. Ob sie auch die Werkstattreparatur im Service Center (Serviceauftrag in S/4HANA) unterstützen, ist nicht belegt.",
+    "proposedAgent": "Briefing/Diagnose auch für die Werkstatt: Fehlerursache aus Historie und Wissensbasis, benötigte Teile, Prüfschritte.",
+    "benefit": "Höhere Erstlösungsquote in der Werkstatt.", "requirementIds": [], "status": "IDENTIFIZIERT", "origin": "RECHERCHE", "marker": "ABGELEITET", "createdBy": "Plattform (Recherche)", "createdAt": "2026-10-20"
+  },
+  {
+    "id": "GAP-04", "title": "Auswertung von Mess-/Funkdaten mit Maßnahmenvorschlag", "nodeIds": ["E02", "C02"],
+    "description": "Zustandsmeldungen (IoT) sind als Einstieg genannt, aber kein Service-Agent analysiert Zählerwerte bzw. Funkdaten, erkennt Muster und schlägt Servicemaßnahmen vor.",
+    "proposedAgent": "Messdaten-Agent: erkennt Auffälligkeiten (Ausfälle, Plausibilität, Muster) und legt Serviceanfragen bzw. Maßnahmenvorschläge an.",
+    "benefit": "Vorausschauender Service statt Reaktion auf Kundenmeldung.", "requirementIds": ["ANF-009"], "status": "IDENTIFIZIERT", "origin": "ANFORDERUNG", "marker": "ABGELEITET", "createdBy": "Plattform (Erstabgleich)", "createdAt": "2026-10-20"
+  },
+  {
+    "id": "GAP-05", "title": "Fachliche Prüfungen bei der Auftragsfreigabe", "nodeIds": ["F01", "E20"],
+    "description": "Die Freigabe ist ein Standardschritt. Ein Agent, der Freigabeprüfungen nach unternehmensspezifischen Regeln eigenständig durchführt, ist nicht genannt; der Business Rule Management Agent (Administration) pflegt Regeln, prüft aber keine Aufträge.",
+    "proposedAgent": "Freigabe-Agent: prüft Aufträge gegen Regeln (z. B. Anlagentyp, Auftragsart, Folgeaktivitäten) und gibt frei oder begründet die Rückweisung.",
+    "benefit": "Weniger manuelle Freigaben, weniger Fehleinsätze.", "requirementIds": ["ANF-008"], "status": "IDENTIFIZIERT", "origin": "ANFORDERUNG", "marker": "ABGELEITET", "createdBy": "Plattform (Erstabgleich)", "createdAt": "2026-10-20"
+  },
+  {
+    "id": "GAP-06", "title": "Bedarfsprüfung bei periodischen Aufträgen (z. B. Ablesung)", "nodeIds": ["F01"],
+    "description": "Branchenspezifische periodische Aufträge (Ablesung im Submetering) sind nicht Teil der SAP-Service-Agenten. Die Frage „ist der Auftrag noch nötig?“ ist auf andere periodische Leistungen übertragbar (Wartung, Prüffristen).",
+    "proposedAgent": "Bedarfsprüfungs-Agent für periodische Aufträge (Kriterien, Datenlage, Empfehlung).",
+    "benefit": "Vermeidet unnötige Einsätze.", "requirementIds": ["ANF-007"], "status": "IDENTIFIZIERT", "origin": "ANFORDERUNG", "marker": "ABGELEITET", "createdBy": "Plattform (Erstabgleich)", "createdAt": "2026-10-20"
+  },
+  {
+    "id": "GAP-07", "title": "Materialverfügbarkeit mit Umverteilungsvorschlag", "nodeIds": ["E21"],
+    "description": "Im Kick-off waren Parts Logistics Monitor und Advance Shipment Monitor genannt, im V128-Stand nicht mehr separat. Umverteilung zwischen Lagern bzw. Fahrzeugbeständen ist für keinen Agenten beschrieben.",
+    "proposedAgent": "Teileverfügbarkeits-Agent: prüft Verfügbarkeit über Lager und Fahrzeugbestände und schlägt Umverteilung oder Beschaffung vor.",
+    "benefit": "Höhere Erstlösungsquote, weniger Folgeeinsätze.", "requirementIds": ["ANF-005"], "status": "IDENTIFIZIERT", "origin": "ANFORDERUNG", "marker": "ABGELEITET", "createdBy": "Plattform (Erstabgleich)", "createdAt": "2026-10-20"
+  }
+]

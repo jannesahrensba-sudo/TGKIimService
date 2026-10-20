@@ -1,0 +1,331 @@
+{
+  "assistants": [
+    { "id": "AS_INTERACTION", "name": "Interaction Management Assistant", "description": "Begleitet das Live-Gespräch: Stimmung, Antwortvorschlag, Empfehlung zur Case-Anlage (V128, Folien 7–8).", "areaIds": ["CASE"], "status": "LAB_PREVIEW", "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN" },
+    { "id": "AS_CASE", "name": "Case Management Assistant", "description": "Bereitet Cases vor (Priorität, Kategorie, Asset-Historie) und empfiehlt den Serviceauftrag (V128, Folie 7). Öffentlich: Case-Management-Assistent im Rahmen Autonomous CX angekündigt.", "areaIds": ["CASE", "OPTIMIZATION"], "status": "LAB_PREVIEW", "sourceIds": ["SRC-V128", "SRC-KICKOFF", "SRC-N-SAVIC"], "marker": "SAP_FOLIEN" },
+    { "id": "AS_SPO", "name": "Service Planning and Operations Assistant", "description": "Koordiniert die Agenten der Serviceplanung: Equipment Insight/Enrichment, Warranty Coverage Check, Service Quotation Optimization, Service Order Planning and Operations, In-House Service Processing, Service Contract Lifecycle Renewal/Performance, Service Scope Recommendation, Maintenance Plan Creation (V128, Folien 13/15).", "areaIds": ["PLANNING"], "status": "LAB_PREVIEW", "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN" },
+    { "id": "AS_SELF", "name": "Self Service Assistant", "description": "Self-Service für Kunden (Kick-off, Folie 11).", "areaIds": ["CASE"], "status": "WIP", "sourceIds": ["SRC-KICKOFF"], "marker": "SAP_FOLIEN" },
+    { "id": "AS_SREP", "name": "Service Representative Assistant", "description": "Unterstützt den Service-Mitarbeiter im Kundenkontakt (Kick-off, Folie 11).", "areaIds": ["CASE"], "status": "WIP", "sourceIds": ["SRC-KICKOFF"], "marker": "SAP_FOLIEN" },
+    { "id": "AS_ORCH", "name": "Service Orchestration Assistant", "description": "Orchestriert Serviceabläufe (Kick-off, Folie 11).", "areaIds": ["CASE", "PLANNING"], "status": "WIP", "sourceIds": ["SRC-KICKOFF"], "marker": "SAP_FOLIEN" },
+    { "id": "AS_CSP", "name": "Commercial Service Planning Assistant", "description": "Kommerzielle Serviceplanung: Anfrage, Garantie, Angebot, Auftrag, In-House (Kick-off, Folie 11).", "areaIds": ["PLANNING"], "status": "WIP", "sourceIds": ["SRC-KICKOFF"], "marker": "SAP_FOLIEN" },
+    { "id": "AS_EXEC", "name": "Execution Planning Assistant", "description": "Ausführungsplanung inkl. Instandhaltungsplanung (Kick-off, Folie 11).", "areaIds": ["PLANNING", "DISPATCH"], "status": "WIP", "sourceIds": ["SRC-KICKOFF"], "marker": "SAP_FOLIEN" },
+    { "id": "AS_POST", "name": "Post Execution Assistant", "description": "Nach der Durchführung: Disposition (FSA), Briefing, Debrief, Rückmeldung, Garantieanspruch (Kick-off, Folie 11).", "areaIds": ["DISPATCH", "EXECUTION", "CLOSE"], "status": "WIP", "sourceIds": ["SRC-KICKOFF"], "marker": "SAP_FOLIEN" },
+    { "id": "AS_SMA", "name": "Service Management Assistant (Autonomous CX)", "description": "Laut Sekundärquelle Joule Assistant für Field Service (Serviceaufträge, Terminierung, Teileprüfung, Disposition über Service Cloud V2 und S/4HANA), GA-Ziel November 2026.", "areaIds": ["PLANNING", "DISPATCH"], "status": "GEPLANT", "sourceIds": ["SRC-N-SAVIC", "SRC-N-SAPPHIRE26"], "marker": "ZU_VERIFIZIEREN" }
+  ],
+  "agents": [
+    {
+      "id": "AG_CASE_CLASS", "name": "Case Classification Agent", "kind": "AGENT", "areaId": "CASE", "assistantId": "AS_CASE", "product": "SAP Service Cloud V2",
+      "status": "VERFUEGBAR", "availability": "verfügbar (seit 2025)",
+      "description": "Liest eingehende Serviceanfragen per Sprachverständnis, erkennt Anliegen und Dringlichkeit und leitet den Case an das passende Team weiter (Routing).",
+      "capabilities": ["Case-Klassifizierung", "Dringlichkeit erkennen", "Routing"], "roles": ["Service Agent"], "nodeIds": ["E04"], "earlierNames": [],
+      "keywords": ["Ticket", "Reklamation", "Klassifizierung", "Kategorie", "Routing", "Priorität", "Kritikalität", "classification"], "sourceIds": ["SRC-P-CASECLASS", "SRC-N-CXAGENTS"], "marker": "SAP_STANDARD"
+    },
+    {
+      "id": "KF_CASE_SUM", "name": "Case Summary (Joule)", "kind": "KI_FUNKTION", "areaId": "CASE", "product": "SAP Service Cloud V2",
+      "status": "VERFUEGBAR", "availability": "Joule Premium for Customer Experience (AI Units)",
+      "description": "Fasst alle ein- und ausgehenden Interaktionen eines Cases zusammen, damit nicht jede Nachricht gelesen werden muss.",
+      "capabilities": ["Zusammenfassung der Interaktionen"], "roles": ["Service Agent"], "nodeIds": ["E05"], "earlierNames": [],
+      "keywords": ["Zusammenfassung", "Hintergrundinformationen", "Bearbeitungsverlauf", "E-Mail", "summary"], "sourceIds": ["SRC-P-CASESUM"], "marker": "SAP_STANDARD"
+    },
+    {
+      "id": "AG_KNOW_CREATE", "name": "Knowledge Creation Agent", "kind": "AGENT", "areaId": "CASE", "assistantId": "AS_CASE", "product": "SAP Service Cloud V2",
+      "status": "VERFUEGBAR", "availability": "verfügbar (seit 2025); in V128 im Bereich Case Management",
+      "description": "Erzeugt aus gelösten Cases strukturierte Wissensartikel (Lösungsschritte je Kundenanliegen, Tags, Kategorien) als Entwurf für den Knowledge Manager.",
+      "capabilities": ["Wissensartikel aus Cases", "Tags & Kategorien vorschlagen", "Review durch Knowledge Manager"], "roles": ["Service Agent", "Knowledge Manager"], "nodeIds": ["E07", "C02"], "earlierNames": [],
+      "keywords": ["Wissen", "Wissensdatenbank", "Lösung", "Artikel", "knowledge"], "sourceIds": ["SRC-N-CXAGENTS", "SRC-V128"], "marker": "SAP_STANDARD"
+    },
+    {
+      "id": "AG_QA", "name": "Q&A Agent", "kind": "AGENT", "areaId": "CASE", "product": "SAP Service Cloud V2",
+      "status": "VERFUEGBAR", "availability": "2025 als vorkonfigurierter Agent genannt",
+      "description": "Beantwortet Fragen des Service-Mitarbeiters aus Handbüchern, Richtlinien und vergangenen Cases („I search multiple systems before I can answer customers“).",
+      "capabilities": ["Antworten aus Wissen, Handbüchern und Cases"], "roles": ["Service Agent"], "nodeIds": ["E05"], "earlierNames": [],
+      "keywords": ["Recherche", "Frage", "Antwort", "Handbuch", "Richtlinie", "Wissen"], "sourceIds": ["SRC-N-CXAGENTS", "SRC-V128"], "marker": "ZU_VERIFIZIEREN",
+      "note": "Name und Lieferumfang in der Quelle nur angerissen – Abgrenzung zum Knowledge Content Retrieval Agent klären."
+    },
+    {
+      "id": "AG_CASE_PREP", "name": "Case Preparation Agent", "kind": "AGENT", "areaId": "CASE", "assistantId": "AS_CASE", "product": "SAP Service Cloud V2",
+      "status": "LAB_PREVIEW",
+      "description": "Bereitet Cases automatisch vor: Priorität, Kategorie, Asset-Historie; empfiehlt bei Bedarf einen Serviceauftrag (Szenario V128, Folie 7).",
+      "capabilities": ["Case vorbereiten", "Asset-Historie anreichern", "Serviceauftrag empfehlen"], "roles": ["Service Agent"], "nodeIds": ["E03", "E04"],
+      "earlierNames": [{ "name": "Request Screening Agent", "source": "Kick-off 07/2026", "marker": "ABGELEITET" }],
+      "keywords": ["Ticket", "Reklamation", "anreichern", "Hintergrundinformationen", "Historie", "Priorität", "Vorbereitung"], "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_CASE_PROC", "name": "Case Processing Agent", "kind": "AGENT", "areaId": "CASE", "assistantId": "AS_CASE", "product": "SAP Service Cloud V2",
+      "status": "LAB_PREVIEW", "description": "Bearbeitet Cases weitgehend autonom entlang definierter Schritte (Funktionsumfang laut Folie nicht detailliert).",
+      "capabilities": ["Case-Bearbeitung"], "roles": ["Service Agent"], "nodeIds": ["E04", "E05"], "earlierNames": [],
+      "keywords": ["Ticketbearbeitung", "Reklamationsbearbeitung", "Case"], "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_CASE_ACTION", "name": "Case Action Recommendation Agent", "kind": "AGENT", "areaId": "CASE", "assistantId": "AS_CASE", "product": "SAP Service Cloud V2",
+      "status": "LAB_PREVIEW", "description": "Empfiehlt die nächste beste Aktion zum Case (z. B. Antwort, Eskalation, Serviceeinsatz).",
+      "capabilities": ["Next Best Action"], "roles": ["Service Agent"], "nodeIds": ["E05", "E06"], "earlierNames": [],
+      "keywords": ["Empfehlung", "nächster Schritt", "Antwort", "Entscheidung"], "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_KNOW_RETR", "name": "Knowledge Content Retrieval Agent", "kind": "AGENT", "areaId": "CASE", "assistantId": "AS_CASE", "product": "SAP Service Cloud V2",
+      "status": "LAB_PREVIEW", "description": "Findet passende Wissensinhalte zum Case.",
+      "capabilities": ["Wissenssuche"], "roles": ["Service Agent"], "nodeIds": ["E05"], "earlierNames": [],
+      "keywords": ["Wissen", "Recherche", "Suche", "Lösung"], "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_SO_PREP", "name": "Service Order Preparation Agent", "kind": "AGENT", "areaId": "CASE", "assistantId": "AS_CASE", "product": "SAP Service Cloud V2",
+      "status": "LAB_PREVIEW", "description": "Bereitet aus dem Case den Serviceauftrag vor (Übergang Service Cloud → S/4HANA Service).",
+      "capabilities": ["Serviceauftrag vorbereiten", "Daten aus Case übernehmen"], "roles": ["Service Agent"], "nodeIds": ["E09"], "earlierNames": [],
+      "keywords": ["Auftragserstellung", "Auftrag anlegen", "Qualitätskontrolle", "doppelte Aufträge", "Serviceanfrage"], "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_DIGITAL", "name": "Digital Service Agent", "kind": "AGENT", "areaId": "CASE", "assistantId": "AS_SELF", "product": "SAP Service Cloud V2 / Portal",
+      "status": "LAB_PREVIEW", "description": "Beantwortet Kundenfragen im Self-Service, z. B. zu Rechnung oder Ticketstatus („I don’t know where to find the answer“).",
+      "capabilities": ["Self-Service", "Statusauskunft", "Cross-/Upsell"], "roles": ["Kunde"], "nodeIds": ["E01", "E07"], "earlierNames": [],
+      "keywords": ["Kundenportal", "Self-Service", "Status", "Chatbot", "Kunde"], "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_ESCAL", "name": "Escalation Agent", "kind": "AGENT", "areaId": "OPTIMIZATION", "product": "SAP Service Cloud V2",
+      "status": "LAB_PREVIEW", "description": "Erkennt eskalationsgefährdete Cases.", "capabilities": ["Eskalationsrisiko erkennen"], "roles": ["Service Agent", "Service Manager"], "nodeIds": ["E04"], "earlierNames": [],
+      "keywords": ["Eskalation", "Kritikalität", "Überfälligkeit", "Reklamation", "Beschwerde"], "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_SENTIMENT", "name": "Sentiment / Topic Agent", "kind": "AGENT", "areaId": "OPTIMIZATION", "product": "SAP Service Cloud V2",
+      "status": "LAB_PREVIEW", "description": "Analysiert Stimmung und Themen der Kundeninteraktionen.", "capabilities": ["Stimmung", "Themenanalyse"], "roles": ["Service Agent", "Service Manager"], "nodeIds": ["E03", "E04"], "earlierNames": [],
+      "keywords": ["Stimmung", "Sentiment", "Themen", "Analyse"], "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_COMPLIANCE", "name": "Compliance Agent", "kind": "AGENT", "areaId": "OPTIMIZATION", "product": "SAP Service Cloud V2",
+      "status": "LAB_PREVIEW", "description": "Prüft Kommunikation und Bearbeitung auf Richtlinienkonformität.", "capabilities": ["Richtlinien prüfen"], "roles": ["Service Agent"], "nodeIds": ["E07"], "earlierNames": [],
+      "keywords": ["Compliance", "Richtlinie", "Qualitätskontrolle"], "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_JOURNEY", "name": "Journey Agent", "kind": "AGENT", "areaId": "OPTIMIZATION", "product": "SAP Service Cloud V2",
+      "status": "LAB_PREVIEW", "description": "Begleitet die Kundenreise über Touchpoints (Funktionsumfang laut Folie nicht detailliert).", "capabilities": ["Kundenreise"], "roles": ["Service Manager"], "nodeIds": ["F04", "C01"], "earlierNames": [],
+      "keywords": ["Kundenkommunikation", "Benachrichtigung", "Transparenz", "Status"], "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_COACHING", "name": "Coaching Agent", "kind": "AGENT", "areaId": "OPTIMIZATION", "product": "SAP Service Cloud V2",
+      "status": "LAB_PREVIEW", "description": "Coacht Service-Mitarbeiter auf Basis ihrer Interaktionen.", "capabilities": ["Coaching"], "roles": ["Service Agent"], "nodeIds": ["E05"], "earlierNames": [],
+      "keywords": ["Schulung", "Coaching", "Einarbeitung"], "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_KNOW_ADMIN", "name": "Knowledge Content Administration Agent", "kind": "AGENT", "areaId": "OPTIMIZATION", "product": "SAP Service Cloud V2",
+      "status": "LAB_PREVIEW", "description": "Pflegt und bereinigt Wissensinhalte.", "capabilities": ["Wissenspflege"], "roles": ["Knowledge Manager"], "nodeIds": ["C02"], "earlierNames": [],
+      "keywords": ["Wissen", "Pflege", "Dokumentation"], "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_SN_INIT", "name": "Service Notification Initiation Agent", "kind": "AGENT", "areaId": "PLANNING", "product": "SAP Cloud ERP",
+      "status": "LAB_PREVIEW", "description": "Startet laut Folie 12 die Serviceplanung (Einstieg Service Planner → Service Planning and Operations Agent); Funktionsumfang nicht beschrieben.",
+      "capabilities": ["Servicemeldung / -anfrage initiieren"], "roles": ["Service Planner"], "nodeIds": ["E02", "E09"], "earlierNames": [],
+      "keywords": ["Meldung", "Serviceanfrage", "Initiierung", "IoT", "Zustandsmeldung"], "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_WARRANTY", "name": "Warranty Coverage Check Agent", "kind": "AGENT", "areaId": "PLANNING", "assistantId": "AS_SPO", "product": "SAP Cloud ERP",
+      "status": "LAB_PREVIEW", "description": "Prüft Garantie- und Vertragsdeckung („Order created, warranty confirmed, SLA calculated“, Folie 7).",
+      "capabilities": ["Garantie prüfen", "SLA berechnen"], "roles": ["Service Planner"], "nodeIds": ["E10", "E17"],
+      "earlierNames": [{ "name": "Entitlement Agent", "source": "Kick-off 07/2026", "marker": "ABGELEITET" }],
+      "keywords": ["Garantie", "Gewährleistung", "Vertrag", "Kostenpflicht", "Entitlement", "SLA"], "sourceIds": ["SRC-V128", "SRC-KICKOFF"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_EQUIP_INS", "name": "Equipment Insights Agent", "kind": "AGENT", "areaId": "PLANNING", "assistantId": "AS_SPO", "product": "SAP Cloud ERP",
+      "status": "LAB_PREVIEW", "description": "Liefert Einsichten zum Equipment: Historie, Kritikalität, Wiederholfehler.",
+      "capabilities": ["Equipment-Historie", "Kritikalität", "Wiederholfehler"], "roles": ["Service Planner", "Service Agent"], "nodeIds": ["E03", "E15"],
+      "earlierNames": [{ "name": "Equipment Insight Agent", "source": "Kick-off 07/2026", "marker": "ABGELEITET" }],
+      "keywords": ["Gerät", "Equipment", "Historie", "Seriennummer", "Befund", "Diagnose"], "sourceIds": ["SRC-V128", "SRC-KICKOFF"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_EQUIP_ENR", "name": "Equipment Enrichment Agent", "kind": "AGENT", "areaId": "PLANNING", "assistantId": "AS_SPO", "product": "SAP Cloud ERP",
+      "status": "LAB_PREVIEW", "description": "Reichert Equipment-Stammdaten an bzw. vervollständigt sie.",
+      "capabilities": ["Stammdaten anreichern"], "roles": ["Service Planner"], "nodeIds": ["E03", "E14"],
+      "earlierNames": [{ "name": "Equipment Enrichment Agent", "source": "Kick-off 07/2026", "marker": "SAP_FOLIEN" }],
+      "keywords": ["Stammdaten", "Equipment", "Seriennummer", "Datenqualität"], "sourceIds": ["SRC-V128", "SRC-KICKOFF"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_SO_PLAN", "name": "Service Order Planning and Operations Agent", "kind": "AGENT", "areaId": "PLANNING", "assistantId": "AS_SPO", "product": "SAP Cloud ERP",
+      "status": "LAB_PREVIEW", "description": "Plant und steuert Serviceaufträge („Service order created … parts identified“, Folie 7); auf Folie 12 als „Service Planning and Operations Agent“.",
+      "capabilities": ["Serviceauftrag anlegen und planen", "Teile identifizieren", "Auftragssteuerung"], "roles": ["Service Planner"], "nodeIds": ["E20", "F01", "E21"],
+      "earlierNames": [
+        { "name": "Service Order Agent (Parts Logistics Monitor, Advance Shipment Monitor, Parts Return)", "source": "Kick-off 07/2026", "marker": "ABGELEITET" },
+        { "name": "Service Planning and Operations Agent", "source": "V128 Folie 12", "marker": "SAP_FOLIEN" }
+      ],
+      "keywords": ["Auftragserstellung", "Auftrag anlegen", "Planung", "Freigabe", "Material", "Ersatzteil", "Teile"], "sourceIds": ["SRC-V128", "SRC-KICKOFF"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_QUOTE_OPT", "name": "Service Quotation Optimization Agent", "kind": "AGENT", "areaId": "PLANNING", "assistantId": "AS_SPO", "product": "SAP Cloud ERP",
+      "status": "GEPLANT", "availability": "Planned Q1/2027 (V128, Folie 15)",
+      "description": "Intelligente Serviceangebote mit automatisierter Kundenfreigabe: KI-gestützter Leistungsumfang aus Servicehistorie und Kontext, Vergleich von Angebotsversionen, Orchestrierung von Annahme und Kundenkommunikation.",
+      "capabilities": ["Leistungsumfang inkl. Leistungen und Ersatzteile empfehlen", "Angebotsversionen vergleichen", "Annahmeprozess und Kundenkommunikation orchestrieren"], "roles": ["Service Sales"], "nodeIds": ["E18", "E19"],
+      "earlierNames": [
+        { "name": "Service Quotation Agent (Quote Versioning, Quote Simulation)", "source": "Kick-off 07/2026", "marker": "ABGELEITET" },
+        { "name": "Quotation Optimization Agent", "source": "V128 Folie 12", "marker": "SAP_FOLIEN" }
+      ],
+      "keywords": ["Angebot", "Kostenvoranschlag", "Angebotsversion", "Preis", "Annahme", "quotation"], "sourceIds": ["SRC-V128", "SRC-KICKOFF"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_IHS_PROC", "name": "In-House Service Processing Agent", "kind": "AGENT", "areaId": "PLANNING", "assistantId": "AS_SPO", "product": "SAP Cloud ERP",
+      "status": "GEPLANT", "availability": "Planned Q1/2027 (V128, Folie 13)",
+      "description": "Durchgängige Orchestrierung des In-House Service: In-House-Belege per natürlicher Sprache aus Versand-, Einkaufs- und Stammdaten anlegen (Kunden und Serviceobjekte erkennen), Logistik der Serviceobjekte (Empfang, Transfer zwischen Service Centern und Gesellschaften, Rücksendung anstoßen), Angebote und Aufträge verknüpfen – Serviceobjekt als zentraler Steuerungspunkt.",
+      "capabilities": ["In-House Service per natürlicher Sprache anlegen", "Kunden und Serviceobjekte erkennen", "Empfang, Transfer, Rücksendung steuern", "Angebote/Aufträge verknüpfen", "Fortschritt am Serviceobjekt verfolgen"], "roles": ["Service Planner"], "nodeIds": ["E12", "E13", "E14", "E26", "E27"],
+      "earlierNames": [{ "name": "Inhouse Service Agent (Logistics Transfer, Split & Merge, Serial#/Material# Change)", "source": "Kick-off 07/2026", "marker": "ABGELEITET" }],
+      "keywords": ["In-House", "Werkstatt", "Einsendung", "Retoure", "Wareneingang", "Rückversand", "Transfer", "Serviceobjekt", "Logistik"], "sourceIds": ["SRC-V128", "SRC-KICKOFF"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_SCOPE_REC", "name": "Service Scope Recommendation Agent", "kind": "AGENT", "areaId": "PLANNING", "assistantId": "AS_SPO", "product": "SAP Cloud ERP",
+      "status": "LAB_PREVIEW", "description": "Empfiehlt den Leistungsumfang (Leistungen, Teile) für Angebot bzw. Auftrag.",
+      "capabilities": ["Leistungsumfang empfehlen"], "roles": ["Service Sales", "Service Planner"], "nodeIds": ["E18", "E20"],
+      "earlierNames": [{ "name": "Service recommendation Agent", "source": "Kick-off 07/2026", "marker": "ABGELEITET" }],
+      "keywords": ["Leistungsumfang", "Empfehlung", "Positionen", "Vorlage"], "sourceIds": ["SRC-V128", "SRC-KICKOFF"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_SERVICE_SALES", "name": "Service Sales Agent", "kind": "AGENT", "areaId": "PLANNING", "product": "SAP Cloud ERP",
+      "status": "LAB_PREVIEW", "description": "Unterstützt den Service-Vertrieb (Folie 12; Szenario Folie 7: Opportunity aus Technikerempfehlung).",
+      "capabilities": ["Folgegeschäft", "Opportunity"], "roles": ["Service Sales"], "nodeIds": ["C02", "E18"], "earlierNames": [],
+      "keywords": ["Upsell", "Cross-Sell", "Opportunity", "Austausch", "Folgegeschäft"], "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_CONTRACT_RENEW", "name": "Service Contract Lifecycle Renewal Agent", "kind": "AGENT", "areaId": "PLANNING", "assistantId": "AS_SPO", "product": "SAP Cloud ERP",
+      "status": "LAB_PREVIEW", "description": "Steuert Verlängerung und Lebenszyklus von Serviceverträgen.", "capabilities": ["Vertragsverlängerung"], "roles": ["Service Sales"], "nodeIds": ["C02"], "earlierNames": [],
+      "keywords": ["Vertrag", "Verlängerung", "Dauerdienst", "Wartungsvertrag"], "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_CONTRACT_PERF", "name": "Service Contract Performance Agent", "kind": "AGENT", "areaId": "PLANNING", "assistantId": "AS_SPO", "product": "SAP Cloud ERP",
+      "status": "LAB_PREVIEW", "description": "Bewertet die Wirtschaftlichkeit und Leistung von Serviceverträgen.", "capabilities": ["Vertragsperformance"], "roles": ["Service Manager"], "nodeIds": ["C02", "E10"], "earlierNames": [],
+      "keywords": ["Profitabilität", "Vertrag", "Auswertung", "Marge"], "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_MPLAN", "name": "Maintenance Plan Creation Agent", "kind": "AGENT", "areaId": "PLANNING", "assistantId": "AS_SPO", "product": "SAP Cloud ERP",
+      "status": "LAB_PREVIEW", "description": "Erstellt Wartungspläne (z. B. als Folge aus Serviceeinsätzen oder Verträgen).", "capabilities": ["Wartungsplan erstellen"], "roles": ["Service Planner"], "nodeIds": ["C02"], "earlierNames": [],
+      "keywords": ["Wartungsplan", "Wartung", "Turnus", "Prüffrist"], "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_WORKLOAD", "name": "Service and Maintenance Workload and Capacity Optimization Agent", "kind": "AGENT", "areaId": "DISPATCH", "product": "SAP Field Service Management",
+      "status": "LAB_PREVIEW", "description": "Optimiert Arbeitslast und Kapazitäten über Service- und Instandhaltungsaufträge.", "capabilities": ["Auslastung", "Kapazitätsplanung"], "roles": ["Service Dispatcher"], "nodeIds": ["F03"], "earlierNames": [],
+      "keywords": ["Auslastung", "Kapazität", "Auftragsbestand", "Planung", "Tour", "Route"], "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_DISPATCH", "name": "Service and Maintenance Dispatching Agent", "kind": "AGENT", "areaId": "DISPATCH", "product": "SAP Field Service Management",
+      "status": "LAB_PREVIEW", "description": "Ordnet den passenden Techniker zu und optimiert die Disposition in Echtzeit neu („Certified tech assigned, parts confirmed in van, customer notified with ETA“).",
+      "capabilities": ["Technikerzuordnung", "Echtzeit-Umplanung", "ETA an Kunden"], "roles": ["Service Dispatcher"], "nodeIds": ["F03", "F04"],
+      "earlierNames": [{ "name": "Service Dispatching Agent (FSA)", "source": "Kick-off 07/2026", "marker": "ABGELEITET" }],
+      "keywords": ["Disposition", "Zuteilung", "Zuteilungsvorschlag", "Techniker", "Monteur", "Skills", "Gebiet", "Termin", "dispatch"], "sourceIds": ["SRC-V128", "SRC-KICKOFF"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_FSM_DISPATCHER", "name": "Field Service Dispatcher Agent", "kind": "AGENT", "areaId": "DISPATCH", "product": "SAP Field Service Management",
+      "status": "VERFUEGBAR", "availability": "verfügbar, AI Units erforderlich",
+      "description": "Ordnet Ressourcen auf Basis von Echtzeitdaten Aufträgen zu (SAP: bis zu 50 % produktivere Disposition).",
+      "capabilities": ["Ressourcen-Auftrags-Matching", "Echtzeitdaten"], "roles": ["Service Dispatcher"], "nodeIds": ["F03"], "earlierNames": [],
+      "keywords": ["Disposition", "Zuteilung", "Zuteilungsvorschlag", "Einsatzplanung", "Monteur", "dispatch"], "sourceIds": ["SRC-P-FSMDISP"], "marker": "SAP_STANDARD",
+      "note": "Verhältnis zum „Service and Maintenance Dispatching Agent“ (V128) klären."
+    },
+    {
+      "id": "KF_FSM_JOULE", "name": "Joule in SAP FSM (Disponent)", "kind": "KI_FUNKTION", "areaId": "DISPATCH", "product": "SAP Field Service Management",
+      "status": "VERFUEGBAR", "availability": "laut SAP in Joule Base enthalten",
+      "description": "Disponenten planen Serviceaufträge per Dialog und erhalten Antworten aus der Dokumentation.", "capabilities": ["Planung per Dialog", "Antworten aus Help"], "roles": ["Service Dispatcher"], "nodeIds": ["F03"], "earlierNames": [],
+      "keywords": ["Disposition", "Plantafel", "Dialog", "Joule"], "sourceIds": ["SRC-P-FSMJOULE"], "marker": "ZU_VERIFIZIEREN", "note": "Lizenzaussage widerspricht der Dispatcher-Agent-Seite."
+    },
+    {
+      "id": "AG_SCHED_POLICY", "name": "Scheduling Policy Management Agent", "kind": "AGENT", "areaId": "DISPATCH", "product": "SAP Field Service Management",
+      "status": "LAB_PREVIEW", "description": "Verwaltet die Regeln (Policies) der automatischen Einsatzplanung.", "capabilities": ["Planungsregeln pflegen"], "roles": ["Service Dispatcher"], "nodeIds": ["F03"], "earlierNames": [],
+      "keywords": ["Regeln", "Parameter", "Auftragsart", "Resteprozess", "Policy"], "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_RES_RESERV", "name": "Resource Reservations Management Agent", "kind": "AGENT", "areaId": "DISPATCH", "product": "SAP Field Service Management",
+      "status": "LAB_PREVIEW", "description": "Verwaltet Ressourcenreservierungen (Abwesenheiten, Blockzeiten).", "capabilities": ["Reservierungen"], "roles": ["Service Dispatcher"], "nodeIds": ["F03"], "earlierNames": [],
+      "keywords": ["Reservierung", "Verfügbarkeit", "Abwesenheit"], "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_CREW", "name": "Autonomous Crew Planner/Manager Agent", "kind": "AGENT", "areaId": "DISPATCH", "product": "SAP Field Service Management",
+      "status": "LAB_PREVIEW", "description": "Plant und steuert Teams (Crews) autonom.", "capabilities": ["Crew-Planung"], "roles": ["Service Dispatcher"], "nodeIds": ["F03"], "earlierNames": [],
+      "keywords": ["Team", "Crew", "Kolonne"], "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_TECH_BRIEF", "name": "Technician Briefing Agent", "kind": "AGENT", "areaId": "EXECUTION", "product": "SAP Field Service Management",
+      "status": "LAB_PREVIEW", "description": "Brieft den Techniker vor dem Einsatz: vollständiger Kontext und KI-gestützte Fehlerursache („Half the time I arrive without the right parts or context“).",
+      "capabilities": ["Einsatz-Briefing", "Fehlerursache vorschlagen", "Kontext zum Auftrag"], "roles": ["Service Technician"], "nodeIds": ["F05", "E22"],
+      "earlierNames": [{ "name": "Technical Briefing Agent (FSA)", "source": "Kick-off 07/2026", "marker": "ABGELEITET" }],
+      "keywords": ["Zusammenfassung", "Auftragsinformationen", "Briefing", "Besonderheiten", "Vorbereitung", "Techniker"], "sourceIds": ["SRC-V128", "SRC-KICKOFF"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_WORK_EXEC", "name": "Work Execution Agent", "kind": "AGENT", "areaId": "EXECUTION", "product": "SAP Field Service Management",
+      "status": "LAB_PREVIEW", "description": "Begleitet die Durchführung; Teile und Zeiten werden automatisch erfasst (Folie 7).",
+      "capabilities": ["Durchführung unterstützen", "Zeit/Teile automatisch erfassen"], "roles": ["Service Technician"], "nodeIds": ["F06", "E22"], "earlierNames": [],
+      "keywords": ["Durchführung", "Dokumentation", "Checkliste", "Zeiterfassung"], "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_DEBRIEF", "name": "Service Debriefing Agent", "kind": "AGENT", "areaId": "CLOSE", "product": "SAP Cloud ERP",
+      "status": "LAB_PREVIEW", "description": "Nachbereitung des Einsatzes (Folie 12: Techniker → Debriefing → Teilerückführung).",
+      "capabilities": ["Einsatz nachbereiten", "Rückmeldung prüfen"], "roles": ["Service Technician", "Service Planner"], "nodeIds": ["F07", "E23"],
+      "earlierNames": [{ "name": "Maintenance Job Debrief Agent", "source": "Kick-off 07/2026", "marker": "ABGELEITET" }],
+      "keywords": ["Rückmeldung", "Auftragsrückmeldung", "Qualitätssicherung", "Nachbereitung", "Plausibilität"], "sourceIds": ["SRC-V128", "SRC-KICKOFF"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_PARTS_RETURN", "name": "Service Parts Return Agent", "kind": "AGENT", "areaId": "CLOSE", "product": "SAP Cloud ERP",
+      "status": "LAB_PREVIEW", "description": "Steuert die Rückführung von Ersatz- und Altteilen.", "capabilities": ["Teilerückführung"], "roles": ["Service Technician", "Logistik"], "nodeIds": ["F08"],
+      "earlierNames": [{ "name": "Parts Return (Teilfunktion Service Order Agent)", "source": "Kick-off 07/2026", "marker": "ABGELEITET" }],
+      "keywords": ["Rückführung", "Altteile", "Ersatzteile", "Retoure"], "sourceIds": ["SRC-V128", "SRC-KICKOFF"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_BILLING", "name": "Billing Orchestration Agent", "kind": "AGENT", "areaId": "CLOSE", "product": "SAP Cloud ERP",
+      "status": "LAB_PREVIEW", "description": "Orchestriert die Fakturierung aus Rückmeldung und Auftrag.", "capabilities": ["Fakturierung orchestrieren"], "roles": ["Finance Expert"], "nodeIds": ["E24", "B01"], "earlierNames": [],
+      "keywords": ["Faktura", "Rechnung", "Abrechnung", "Fakturierung", "billing"], "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_SETTLE", "name": "Settlement Agent", "kind": "AGENT", "areaId": "CLOSE", "product": "SAP Cloud ERP",
+      "status": "LAB_PREVIEW", "description": "Abrechnung von Kosten und Erlösen.", "capabilities": ["Abrechnung"], "roles": ["Finance Expert"], "nodeIds": ["B02"], "earlierNames": [],
+      "keywords": ["Abrechnung", "Controlling", "Settlement", "Kosten", "Erlöse"], "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_MONITOR", "name": "AI assisted Service Monitor (Operation Monitoring & Resolution / Service Control Tower)", "kind": "AGENT", "areaId": "QUERSCHNITT", "product": "übergreifend",
+      "status": "LAB_PREVIEW", "description": "Prozessübergreifende Überwachung und Auflösung von Störungen im Serviceablauf (Kick-off: AI assisted Service Monitor; V128 Folie 12: Operation Monitoring and Resolution / Service Control Tower).",
+      "capabilities": ["Prozessmonitoring", "Ausnahmen erkennen und auflösen"], "roles": ["Service Manager"], "nodeIds": ["C02", "F03", "E20"],
+      "earlierNames": [{ "name": "AI assisted Service Monitor", "source": "Kick-off 07/2026", "marker": "SAP_FOLIEN" }],
+      "keywords": ["Auffälligkeiten", "Auftragsbestand", "Überfälligkeit", "Monitoring", "Kritikalität", "Steuerung", "Control Tower"], "sourceIds": ["SRC-V128", "SRC-KICKOFF"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_RULES", "name": "Business Rule Management Agent", "kind": "AGENT", "areaId": "ADMIN", "product": "übergreifend",
+      "status": "LAB_PREVIEW", "description": "Unterstützt bei Definition und Pflege von Geschäftsregeln.", "capabilities": ["Geschäftsregeln pflegen"], "roles": ["Key User"], "nodeIds": [], "earlierNames": [],
+      "keywords": ["Regeln", "Prüfregeln", "Freigaberegeln", "Kriterien"], "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN"
+    },
+    { "id": "AG_EXT_QC", "name": "Custom Extension Quality Check Agent", "kind": "AGENT", "areaId": "ADMIN", "product": "übergreifend", "status": "LAB_PREVIEW", "description": "Prüft Qualität kundeneigener Erweiterungen.", "capabilities": ["Erweiterungen prüfen"], "roles": ["Key User", "Entwickler"], "nodeIds": [], "earlierNames": [], "keywords": ["Erweiterung", "Clean Core", "Qualität"], "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN" },
+    { "id": "AG_CUSTOM_FIELD", "name": "Custom Field Management Agent", "kind": "AGENT", "areaId": "ADMIN", "product": "übergreifend", "status": "LAB_PREVIEW", "description": "Verwaltet kundeneigene Felder.", "capabilities": ["Zusatzfelder"], "roles": ["Key User"], "nodeIds": [], "earlierNames": [], "keywords": ["Zusatzfeld", "Erweiterung"], "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN" },
+    { "id": "AG_TRANSL", "name": "AI Translations Management Agent", "kind": "AGENT", "areaId": "ADMIN", "product": "übergreifend", "status": "LAB_PREVIEW", "description": "KI-gestützte Übersetzungsverwaltung.", "capabilities": ["Übersetzungen"], "roles": ["Key User"], "nodeIds": [], "earlierNames": [], "keywords": ["Übersetzung", "Sprache"], "sourceIds": ["SRC-V128"], "marker": "SAP_FOLIEN" },
+    {
+      "id": "KF_IHS_INIT", "name": "In-house service initiation (KI-Funktion)", "kind": "KI_FUNKTION", "areaId": "PLANNING", "product": "SAP S/4HANA Cloud Private Edition",
+      "status": "VERFUEGBAR", "availability": "Joule Premium for Supply Chain Management (AI Units)",
+      "description": "Erzeugt aus gescannten oder fotografierten Papierbelegen (z. B. Bestellungen) die Liste der Serviceobjekte zum In-House Service; Prüfung durch den Mitarbeiter.",
+      "capabilities": ["Belegerkennung", "Serviceobjekte vorschlagen"], "roles": ["Service Planner"], "nodeIds": ["E12", "E13"], "earlierNames": [],
+      "keywords": ["In-House", "Einsendung", "Beleg", "Scan", "Papier", "Bestellung", "Serviceobjekt"], "sourceIds": ["SRC-DC-IHSINIT"], "marker": "SAP_STANDARD"
+    },
+    {
+      "id": "KF_JOULE_SO", "name": "Joule für Serviceaufträge", "kind": "KI_FUNKTION", "areaId": "PLANNING", "product": "SAP S/4HANA Cloud Private Edition",
+      "status": "VERFUEGBAR", "availability": "ab Private Edition 2025 FPS0 (Hinweise, APIs, Berechtigungen nötig)",
+      "description": "Serviceaufträge per Dialog bearbeiten (z. B. Statusänderung mit Bestätigung, vollständige Systemmeldungen); Joule-Suche nach Serviceobjekten ab 2023 FPS03.",
+      "capabilities": ["Statusänderung per Dialog", "Suche nach Serviceobjekten"], "roles": ["Service Planner"], "nodeIds": ["E20", "F01"], "earlierNames": [],
+      "keywords": ["Joule", "Serviceauftrag", "Status", "Dialog", "Freigabe"], "sourceIds": ["SRC-C-JOULESO", "SRC-L-IHS-NEW"], "marker": "ZU_VERIFIZIEREN"
+    },
+    {
+      "id": "AG_KO_TEMPLATE", "name": "Service Template Agent", "kind": "AGENT", "areaId": "PLANNING", "product": "SAP Cloud ERP",
+      "status": "WIP", "description": "Im Kick-off genannt (Serviceauftragsvorlagen); im V128-Stand nicht mehr separat genannt – Verbleib klären.",
+      "capabilities": ["Serviceauftragsvorlagen"], "roles": ["Service Planner"], "nodeIds": ["E20", "F01"], "earlierNames": [],
+      "keywords": ["Vorlage", "Template", "Standardauftrag"], "sourceIds": ["SRC-KICKOFF"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_KO_PARTS_MON", "name": "Parts Logistics Monitor / Advance Shipment Monitor", "kind": "AGENT", "areaId": "PLANNING", "product": "SAP Cloud ERP",
+      "status": "WIP", "description": "Teilfunktionen des „Service Order Agent“ im Kick-off: Überwachung der Teilelogistik und von Vorabversand; im V128-Stand nicht separat genannt.",
+      "capabilities": ["Teilelogistik überwachen", "Vorabversand überwachen"], "roles": ["Service Planner"], "nodeIds": ["E21"], "earlierNames": [],
+      "keywords": ["Material", "Materialverfügbarkeit", "Ersatzteil", "Lieferung", "Umverteilung", "Vorabversand"], "sourceIds": ["SRC-KICKOFF"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_KO_CONF", "name": "Service Confirmation Agent", "kind": "AGENT", "areaId": "CLOSE", "product": "SAP Cloud ERP",
+      "status": "WIP", "description": "Im Kick-off genannt (Post Execution); im V128-Stand nicht mehr separat genannt – ggf. in Service Debriefing / Work Execution aufgegangen (OFFEN).",
+      "capabilities": ["Servicerückmeldung"], "roles": ["Service Technician"], "nodeIds": ["E23", "F07"], "earlierNames": [],
+      "keywords": ["Rückmeldung", "Auftragsrückmeldung", "Bestätigung"], "sourceIds": ["SRC-KICKOFF"], "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "AG_KO_WCLAIM", "name": "Warranty Claim Agent", "kind": "AGENT", "areaId": "CLOSE", "product": "SAP Cloud ERP",
+      "status": "WIP", "description": "Im Kick-off genannt (Garantieansprüche nach der Durchführung); im V128-Stand nicht mehr genannt – Verbleib klären.",
+      "capabilities": ["Garantieanspruch"], "roles": ["Finance Expert"], "nodeIds": ["E24"], "earlierNames": [],
+      "keywords": ["Garantieanspruch", "Lieferantenregress", "Gewährleistung"], "sourceIds": ["SRC-KICKOFF"], "marker": "SAP_FOLIEN"
+    },
+    { "id": "AG_KO_TASKLIST", "name": "Task List Management Agent", "kind": "AGENT", "areaId": "PLANNING", "product": "SAP Cloud ERP (EAM)", "status": "WIP", "description": "Im Kick-off genannt (Arbeitspläne, Execution Planning); im V128-Service-Stand nicht genannt.", "capabilities": ["Arbeitspläne"], "roles": ["Service Planner"], "nodeIds": [], "earlierNames": [], "keywords": ["Arbeitsplan", "Tätigkeiten"], "sourceIds": ["SRC-KICKOFF"], "marker": "SAP_FOLIEN" },
+    { "id": "AG_KO_MOPP", "name": "Maintenance Opportunity Planning Agent", "kind": "AGENT", "areaId": "PLANNING", "product": "SAP Cloud ERP (EAM)", "status": "WIP", "description": "Im Kick-off genannt (Execution Planning).", "capabilities": ["Instandhaltungsgelegenheiten planen"], "roles": ["Service Planner"], "nodeIds": [], "earlierNames": [], "keywords": ["Instandhaltung", "Wartung"], "sourceIds": ["SRC-KICKOFF"], "marker": "SAP_FOLIEN" },
+    { "id": "AG_KO_OMOP", "name": "Operational Maintenance Order Planning Agent", "kind": "AGENT", "areaId": "PLANNING", "product": "SAP Cloud ERP (EAM)", "status": "WIP", "description": "Im Kick-off genannt (Execution Planning).", "capabilities": ["Instandhaltungsaufträge planen"], "roles": ["Service Planner"], "nodeIds": [], "earlierNames": [], "keywords": ["Instandhaltungsauftrag", "Advanced Execution"], "sourceIds": ["SRC-KICKOFF"], "marker": "SAP_FOLIEN" },
+    { "id": "AG_KO_MEP", "name": "Maintenance Event Planning Agent", "kind": "AGENT", "areaId": "PLANNING", "product": "SAP Cloud ERP (EAM)", "status": "WIP", "description": "Im Kick-off genannt (Execution Planning).", "capabilities": ["Instandhaltungsereignisse planen"], "roles": ["Service Planner"], "nodeIds": [], "earlierNames": [], "keywords": ["Revision", "Stillstand", "Instandhaltung"], "sourceIds": ["SRC-KICKOFF"], "marker": "SAP_FOLIEN" }
+  ]
+}

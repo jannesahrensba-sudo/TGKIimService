@@ -1,0 +1,9 @@
+node_modules/
+dist/
+dist-static/
+.tg-data/
+*.log
+.env
+.env.local
+.DS_Store
+coverage/

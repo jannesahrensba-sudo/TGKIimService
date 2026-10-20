@@ -1,0 +1,282 @@
+{
+  "id": "E2E-SERVICE",
+  "code": "E2E",
+  "name": "Serviceprozess End-to-End (SAP-Standard heute, mit In-House Service)",
+  "description": "Ganzheitlicher Serviceprozess vom ersten Kundenkontakt bis zum finanziellen Abschluss, wie ihn SAP heute im Standard abbildet: SAP Service Cloud V2 (Case Management), SAP S/4HANA Service (Garantie/Vertrag, Angebot, Serviceauftrag, In-House Service, Rückmeldung, Faktura), S/4HANA-Logistik (Retoure, Wareneingang, Auslieferung) und SAP Field Service Management (Disposition, mobile Durchführung). Die In-House-Strecke folgt In-House Service 2.0 (ab 2023 FPS02, Begriffe ab Release 2025).",
+  "scope": "Reaktiver Service (Störung/Anfrage) mit zwei Abwicklungsarten: In-House Service (Gerät wird eingesendet) und Field Service (Einsatz vor Ort). Nicht im Detail: Serviceverträge/Wartungsplanung, Service with Advanced Execution (EAM), Intercompany – als Hinweise an den Schritten.",
+  "version": "0.1",
+  "customerPool": "Kunde",
+  "sourceIds": ["SRC-L-IHR-PROC", "SRC-L-IHR-LOG", "SRC-L-FSM", "SRC-V128"],
+  "lanes": [
+    { "id": "L_CS", "name": "Kundenservice", "role": "Service Agent", "systemIds": ["SC2"] },
+    { "id": "L_SALES", "name": "Service-Vertrieb", "role": "Service Sales", "systemIds": ["S4"] },
+    { "id": "L_PLAN", "name": "Serviceplanung", "role": "Service Planner", "systemIds": ["S4"] },
+    { "id": "L_DISP", "name": "Disposition", "role": "Service Dispatcher", "systemIds": ["FSM"] },
+    { "id": "L_LOG", "name": "Logistik & Wareneingang", "role": "Shipping / Receiving Specialist", "systemIds": ["S4LOG"] },
+    { "id": "L_TECH", "name": "Techniker (Werkstatt & vor Ort)", "role": "Service Technician", "systemIds": ["S4", "FSM"] },
+    { "id": "L_FIN", "name": "Fakturierung & Finanzen", "role": "Finance Expert", "systemIds": ["S4"] }
+  ],
+  "nodes": [
+    {
+      "id": "E01", "type": "messageStartEvent", "name": "Kundenanliegen geht ein", "laneId": "L_CS", "areaId": "CASE",
+      "description": "Kunde meldet Störung oder Anfrage über Telefon, E-Mail, Chat oder Portal.",
+      "systemIds": ["SC2", "PORTAL"], "objects": ["Interaktion"], "apps": [], "scopeItems": [], "sourceIds": ["SRC-V128"],
+      "customerInbound": "Störung / Anfrage", "keywords": ["Anruf", "E-Mail", "Chat", "Portal", "Meldung", "Kundenportal"], "marker": "SAP_STANDARD"
+    },
+    {
+      "id": "E02", "type": "messageStartEvent", "name": "Zustandsmeldung (IoT / Monitoring)", "laneId": "L_CS", "areaId": "CASE",
+      "description": "Zustandsbasierte Meldung aus IoT- oder Monitoringdaten (Condition-based Monitoring) löst einen Case bzw. eine Serviceanfrage aus.",
+      "systemIds": ["SC2"], "objects": ["Meldung", "Messwerte"], "apps": [], "scopeItems": [], "sourceIds": ["SRC-KICKOFF", "SRC-V128"],
+      "keywords": ["IoT", "Funk", "Funkdaten", "Zählerwerte", "Messwerte", "Ablesung", "Ableseergebnisse", "Monitoring", "Muster", "Alarm", "Sensor"],
+      "note": "Kanal IoT laut V128 (Customer Service) und „Condition based monitoring“ (Kick-off). Konkretes Integrationsszenario je Produkt prüfen.", "marker": "SAP_FOLIEN"
+    },
+    {
+      "id": "E03", "type": "userTask", "name": "Interaktion erfassen, Kunde & Equipment identifizieren", "laneId": "L_CS", "areaId": "CASE",
+      "description": "Service Agent erfasst die Interaktion im Customer Hub, identifiziert Kunde, Ansprechpartner und betroffenes Equipment (registriertes Produkt) und sieht die Historie.",
+      "systemIds": ["SC2"], "objects": ["Interaktion", "Geschäftspartner", "Equipment / Registriertes Produkt"], "apps": ["Customer Hub (Service Cloud V2)"], "scopeItems": [], "sourceIds": ["SRC-V128", "SRC-N-CXAGENTS"],
+      "keywords": ["Kunde identifizieren", "Gerät", "Equipment", "Seriennummer", "Kontaktdaten", "Anmeldung", "Historie"], "marker": "SAP_STANDARD"
+    },
+    {
+      "id": "E04", "type": "userTask", "name": "Case anlegen, klassifizieren & priorisieren", "laneId": "L_CS", "areaId": "CASE",
+      "description": "Case mit Kategorie, Priorität und SLA anlegen; Routing an das zuständige Team. Case-Kategorisierung kann aus historischen Cases gelernt werden.",
+      "systemIds": ["SC2"], "objects": ["Case", "SLA"], "apps": [], "scopeItems": [], "sourceIds": ["SRC-P-CASECLASS", "SRC-N-CXAGENTS"],
+      "keywords": ["Ticket", "Reklamation", "Beschwerde", "Klassifizierung", "Kategorie", "Priorität", "Kritikalität", "Routing", "Eskalation", "Stimmung"], "marker": "SAP_STANDARD"
+    },
+    {
+      "id": "E05", "type": "userTask", "name": "Lösung recherchieren (Wissen, Historie, Garantie)", "laneId": "L_CS", "areaId": "CASE",
+      "description": "Wissensdatenbank, Case- und Gerätehistorie sowie Garantie-/Vertragsstatus prüfen; Antwort an den Kunden vorbereiten.",
+      "systemIds": ["SC2"], "objects": ["Wissensartikel", "Case-Historie"], "apps": [], "scopeItems": [], "sourceIds": ["SRC-N-CXAGENTS", "SRC-P-CASESUM"],
+      "keywords": ["Recherche", "Hintergrundinformationen", "Bearbeitungsverlauf", "Wissen", "E-Mail", "Antwort formulieren", "Zusammenfassung", "Pünktlichkeit"], "marker": "SAP_STANDARD"
+    },
+    { "id": "E06", "type": "exclusiveGateway", "name": "Remote lösbar?", "laneId": "L_CS", "areaId": "CASE", "description": "Kann das Anliegen ohne Serviceeinsatz gelöst werden?", "systemIds": [], "objects": [], "apps": [], "scopeItems": [], "sourceIds": [], "marker": "SAP_STANDARD" },
+    {
+      "id": "E07", "type": "sendTask", "name": "Lösung mitteilen & Case lösen", "laneId": "L_CS", "areaId": "CASE",
+      "description": "Antwort bzw. Lösung an den Kunden senden, Case auf gelöst setzen.",
+      "systemIds": ["SC2"], "objects": ["Case", "E-Mail"], "apps": [], "scopeItems": [], "sourceIds": ["SRC-V128"],
+      "customerOutbound": "Lösung / Antwort", "keywords": ["E-Mail", "Antwort", "Kundenkommunikation"], "marker": "SAP_STANDARD"
+    },
+    { "id": "E08", "type": "endEvent", "name": "Anliegen gelöst (First Contact Resolution)", "laneId": "L_CS", "areaId": "CASE", "description": "", "systemIds": [], "objects": [], "apps": [], "scopeItems": [], "sourceIds": [], "marker": "SAP_STANDARD" },
+    {
+      "id": "E09", "type": "userTask", "name": "Serviceeinsatz anstoßen (Folgebeleg in S/4HANA Service)", "laneId": "L_CS", "areaId": "CASE",
+      "description": "Aus dem Case wird der Folgebeleg in S/4HANA Service vorbereitet (Serviceanfrage oder Serviceauftrag) – inkl. Kunde, Equipment, Schadensbild.",
+      "systemIds": ["SC2", "S4"], "objects": ["Case", "Serviceanfrage", "Serviceauftrag"], "apps": [], "scopeItems": [], "sourceIds": ["SRC-V128"],
+      "keywords": ["Auftragserstellung", "Auftrag anlegen", "doppelte Aufträge", "Dubletten", "Bündelung", "Serviceanfrage"],
+      "note": "Integrationsszenario Service Cloud V2 → S/4HANA Service (Folgebeleg aus Case) für die Zielrelease prüfen.", "marker": "ZU_VERIFIZIEREN"
+    },
+    {
+      "id": "E10", "type": "businessRuleTask", "name": "Garantie & Vertrag prüfen (Entitlement)", "laneId": "L_PLAN", "areaId": "PLANNING",
+      "description": "Garantiefindung (Garantie-Prüfprofil, Mastergarantie am Equipment; ab 2025 FPS0 auch abgelaufene/datumsbasierte Garantien und Übersteuern) und Servicevertragsfindung (Auftraggeber, VkOrg/VtWeg, Gültigkeit) – bestimmt Kostenpflicht und Konditionen.",
+      "systemIds": ["S4"], "objects": ["Garantie", "Servicevertrag", "Equipment"], "apps": [], "scopeItems": ["426 / 3MO (Serviceverträge)"], "sourceIds": ["SRC-B-WARRANTY", "SRC-L-WARRANTY25", "SRC-L-CONTRACT"],
+      "keywords": ["Garantie", "Gewährleistung", "Vertrag", "Wartungsvertrag", "Kostenpflicht", "Dauerdienst", "Entitlement", "SLA"], "marker": "SAP_STANDARD"
+    },
+    { "id": "E11", "type": "exclusiveGateway", "name": "Abwicklungsart?", "laneId": "L_PLAN", "areaId": "PLANNING", "description": "In-House Service (Gerät wird eingesendet) oder Einsatz vor Ort (Field Service).", "systemIds": [], "objects": [], "apps": [], "scopeItems": [], "sourceIds": [], "marker": "SAP_STANDARD" },
+    {
+      "id": "E12", "type": "userTask", "name": "Retourenauftrag & In-House Service anlegen", "laneId": "L_PLAN", "areaId": "PLANNING",
+      "description": "Retourenauftrag mit Folgeaktivität „In-House Service fortführen“ und In-House Service mit Serviceobjekten anlegen (Massenaktionen möglich). Alternative: In-House Service entsteht automatisch beim Wareneingang/Prüfung oder beim Sichern eines Angebots mit Serviceobjekt.",
+      "systemIds": ["S4", "S4LOG"], "objects": ["Retourenauftrag", "In-House Service", "Serviceobjekt"], "apps": ["Manage In-House Services", "Manage In-House Service Objects"], "scopeItems": ["3XK (Public Cloud)"], "sourceIds": ["SRC-L-IHR-LOG", "SRC-L-IHS-NEW", "SRC-C-IHR-AE"],
+      "customerOutbound": "Rücksendeinformation", "keywords": ["In-House", "Werkstatt", "Einsendung", "Retoure", "Reparaturobjekt", "Serviceobjekt"],
+      "note": "Fiori-App-IDs (F7695 / F4025) in den Quellen widersprüchlich – im Fiori Apps Reference Library prüfen.", "marker": "SAP_STANDARD"
+    },
+    {
+      "id": "E13", "type": "receiveTask", "name": "Gerät empfangen & Wareneingang buchen", "laneId": "L_LOG", "areaId": "PLANNING",
+      "description": "Shipping Specialist bucht den Wareneingang zum Retourenauftrag; Kundenretouren können auf Kundensonderbestand gebucht werden (2025). Serviceobjekt: „Received by Service Center“.",
+      "systemIds": ["S4LOG"], "objects": ["Retourenlieferung", "Wareneingang", "Kundensonderbestand"], "apps": [], "scopeItems": [], "sourceIds": ["SRC-L-IHR-LOG", "SRC-L-IHS-FPS1"],
+      "customerInbound": "Gerät wird eingesendet", "keywords": ["Wareneingang", "Eingang", "Lager", "Logistik"], "marker": "SAP_STANDARD"
+    },
+    {
+      "id": "E14", "type": "userTask", "name": "Eingangsprüfung (Inspection)", "laneId": "L_LOG", "areaId": "PLANNING",
+      "description": "Receiving Specialist prüft das Gerät; mit „Material Received“ und Prüfergebnis legt das System den In-House Service automatisch an. Transfer an ein anderes Service Center (auch Intercompany ab 2025 FPS1) möglich.",
+      "systemIds": ["S4LOG", "S4"], "objects": ["Prüfergebnis", "Serviceobjekt"], "apps": [], "scopeItems": [], "sourceIds": ["SRC-L-IHR-LOG", "SRC-L-IHS-FPS1"],
+      "keywords": ["Prüfung", "Sichtprüfung", "Eingangskontrolle", "Seriennummer", "Transfer", "Service Center"], "marker": "SAP_STANDARD"
+    },
+    {
+      "id": "E15", "type": "userTask", "name": "Vorprüfung (Precheck) je Serviceobjekt", "laneId": "L_PLAN", "areaId": "PLANNING",
+      "description": "Je Serviceobjekt entscheiden: reparieren oder unrepariert an den Kunden zurück (dann kein Serviceauftrag). Kostenpflichtige Diagnose möglich.",
+      "systemIds": ["S4"], "objects": ["Serviceobjekt"], "apps": ["Perform Prechecks"], "scopeItems": [], "sourceIds": ["SRC-H-PRECHECK", "SRC-L-3XK"],
+      "keywords": ["Vorprüfung", "Diagnose", "Reparaturentscheidung", "Austausch", "Verschrottung", "Befund"],
+      "note": "Verschrottungs-/Austauschentscheidung als eigene Option in keiner Quelle gefunden (OFFEN).", "marker": "SAP_STANDARD"
+    },
+    { "id": "E16", "type": "exclusiveGateway", "name": "Ergebnis Vorprüfung?", "laneId": "L_PLAN", "areaId": "PLANNING", "description": "", "systemIds": [], "objects": [], "apps": [], "scopeItems": [], "sourceIds": ["SRC-H-PRECHECK"], "marker": "SAP_STANDARD" },
+    { "id": "E17", "type": "exclusiveGateway", "name": "Kostenpflichtig?", "laneId": "L_PLAN", "areaId": "PLANNING", "description": "Ergebnis der Garantie-/Vertragsprüfung.", "systemIds": [], "objects": [], "apps": [], "scopeItems": [], "sourceIds": [], "marker": "SAP_STANDARD" },
+    {
+      "id": "E18", "type": "userTask", "name": "Serviceangebot erstellen & versenden", "laneId": "L_SALES", "areaId": "PLANNING",
+      "description": "Serviceangebot (Festpreis oder Aufwand, mit Versionen) für die Serviceobjekte erstellen; ist ein Serviceobjekt enthalten, wird der In-House-Service-Beleg beim Sichern verknüpft bzw. angelegt.",
+      "systemIds": ["S4"], "objects": ["Serviceangebot", "Festpreisvariante"], "apps": [], "scopeItems": [], "sourceIds": ["SRC-C-IHR-AE", "SRC-L-IHR-PROC"],
+      "customerOutbound": "Angebot", "keywords": ["Angebot", "Kostenvoranschlag", "Preis", "Festpreis", "Angebotsversion"], "marker": "SAP_STANDARD"
+    },
+    { "id": "E19", "type": "exclusiveGateway", "name": "Angebot angenommen?", "laneId": "L_SALES", "areaId": "PLANNING", "description": "", "systemIds": [], "objects": [], "apps": [], "scopeItems": [], "sourceIds": [], "customerInbound": "Annahme / Ablehnung", "marker": "SAP_STANDARD" },
+    { "id": "E20J", "type": "exclusiveGateway", "name": "", "laneId": "L_PLAN", "areaId": "PLANNING", "description": "Zusammenführung", "systemIds": [], "objects": [], "apps": [], "scopeItems": [], "sourceIds": [], "marker": "SAP_STANDARD" },
+    {
+      "id": "E20", "type": "userTask", "name": "Serviceauftrag (Reparatur) anlegen, planen & freigeben", "laneId": "L_PLAN", "areaId": "PLANNING",
+      "description": "Je Serviceobjekt ein Serviceauftrag; Servicemitarbeiter, Termine und Ersatzteilpositionen planen, Auftrag freigeben. Alternative: Service with Advanced Execution (Ausführungsauftragsposition → abrechenbarer Instandhaltungsauftrag).",
+      "systemIds": ["S4"], "objects": ["Serviceauftrag", "Serviceauftragsvorlage"], "apps": ["Manage Service Orders", "Plan Repairs"], "scopeItems": ["3XK", "3D2"], "sourceIds": ["SRC-L-3XK", "SRC-L-IHR-PROC", "SRC-L-AE"],
+      "keywords": ["Reparaturauftrag", "Auftragsfreigabe", "Freigabe", "Planung", "Auftrag anlegen", "Vorlage"],
+      "note": "App-Namen „Plan Repairs“/„Manage Service Orders“ je Release prüfen.", "marker": "SAP_STANDARD"
+    },
+    {
+      "id": "E21", "type": "serviceTask", "name": "Ersatzteile reservieren / beschaffen", "laneId": "L_PLAN", "areaId": "PLANNING",
+      "description": "Bei Freigabe entsteht für Ersatzteilpositionen automatisch eine Bestellanforderung bzw. Reservierung.",
+      "systemIds": ["S4", "S4LOG"], "objects": ["Reservierung", "Bestellanforderung"], "apps": [], "scopeItems": [], "sourceIds": ["SRC-L-3XK"],
+      "keywords": ["Material", "Materialverfügbarkeit", "Ersatzteil", "Umverteilung", "Lager", "Beschaffung", "Verfügbarkeitsprüfung"], "marker": "SAP_STANDARD"
+    },
+    {
+      "id": "E22", "type": "userTask", "name": "Reparatur in der Werkstatt durchführen", "laneId": "L_TECH", "areaId": "EXECUTION",
+      "description": "Techniker im Service Center führt die Reparatur am Serviceobjekt aus (Serviceauftrag in S/4HANA; Ausführung in EAM bei Advanced Execution).",
+      "systemIds": ["S4"], "objects": ["Serviceauftrag", "Serviceobjekt"], "apps": [], "scopeItems": [], "sourceIds": ["SRC-L-3XK"],
+      "keywords": ["Werkstatt", "Reparatur", "Techniker", "Monteur"], "marker": "SAP_STANDARD"
+    },
+    {
+      "id": "E23", "type": "userTask", "name": "Zeiten & Material rückmelden", "laneId": "L_TECH", "areaId": "CLOSE",
+      "description": "Servicerückmeldung je Auftragsposition (Zeit, Ersatzteile, Spesen); Buchungen nach Controlling.",
+      "systemIds": ["S4"], "objects": ["Servicerückmeldung"], "apps": [], "scopeItems": [], "sourceIds": ["SRC-L-3XK"],
+      "keywords": ["Rückmeldung", "Auftragsrückmeldung", "Zeit", "Material", "Qualitätssicherung"], "marker": "SAP_STANDARD"
+    },
+    {
+      "id": "E24", "type": "userTask", "name": "Abschließen & zur Fakturierung freigeben", "laneId": "L_PLAN", "areaId": "CLOSE",
+      "description": "Rückmeldungen prüfen, Serviceauftrag abschließen (nur abgeschlossene Aufträge sind fakturierbar), Freigabe zur Fakturierung – erzeugt die Fakturaanforderung.",
+      "systemIds": ["S4"], "objects": ["Serviceauftrag", "Fakturaanforderung"], "apps": ["Prepare for Billing"], "scopeItems": [], "sourceIds": ["SRC-L-IHR-PROC", "SRC-L-3XK"],
+      "keywords": ["Abschluss", "Freigabe zur Fakturierung", "Prüfung Rückmeldung"], "marker": "SAP_STANDARD"
+    },
+    { "id": "E26J", "type": "exclusiveGateway", "name": "", "laneId": "L_LOG", "areaId": "CLOSE", "description": "Zusammenführung", "systemIds": [], "objects": [], "apps": [], "scopeItems": [], "sourceIds": [], "marker": "SAP_STANDARD" },
+    {
+      "id": "E26", "type": "userTask", "name": "Serviceobjekt zurücksenden (Auslieferung & Warenausgang)", "laneId": "L_LOG", "areaId": "CLOSE",
+      "description": "Auslieferung zum Retourenauftrag anlegen (z. B. über „Prepare for Billing“) und Warenausgang buchen; Retourenauftrag ohne Erstattung (No Refund) abschließen.",
+      "systemIds": ["S4LOG"], "objects": ["Auslieferung", "Warenausgang", "Retourenauftrag"], "apps": ["Prepare for Billing"], "scopeItems": [], "sourceIds": ["SRC-L-IHR-LOG"],
+      "customerOutbound": "Gerät zurück", "keywords": ["Rückversand", "Versand", "Auslieferung", "Warenausgang"], "marker": "SAP_STANDARD"
+    },
+    {
+      "id": "E27", "type": "userTask", "name": "Serviceobjekt & In-House Service abschließen", "laneId": "L_PLAN", "areaId": "CLOSE",
+      "description": "Serviceobjekt auf „Abgeschlossen“ setzen; In-House Service beenden.",
+      "systemIds": ["S4"], "objects": ["Serviceobjekt", "In-House Service"], "apps": ["Manage In-House Service Objects"], "scopeItems": [], "sourceIds": ["SRC-L-IHR-PROC"],
+      "keywords": ["Abschluss", "Status"], "marker": "SAP_STANDARD"
+    },
+    {
+      "id": "F01", "type": "userTask", "name": "Serviceauftrag anlegen & freigeben", "laneId": "L_PLAN", "areaId": "PLANNING",
+      "description": "Serviceauftrag (ggf. aus Serviceanfrage, Angebot, Vorlage oder Vertrag) mit Positionen anlegen und freigeben.",
+      "systemIds": ["S4"], "objects": ["Serviceauftrag", "Serviceanfrage", "Serviceauftragsvorlage"], "apps": ["Manage Service Orders"], "scopeItems": ["3D2"], "sourceIds": ["SRC-L-FSM"],
+      "keywords": ["Auftragserstellung", "Auftrag anlegen", "Auftragsfreigabe", "Freigabe", "doppelte Aufträge", "Bündelung", "Ableseauftrag", "Hochrüstung"], "marker": "SAP_STANDARD"
+    },
+    {
+      "id": "F02", "type": "serviceTask", "name": "Serviceauftrag an SAP FSM übertragen", "laneId": "L_PLAN", "areaId": "PLANNING",
+      "description": "Freigegebener Serviceauftrag wird an SAP Field Service Management repliziert (Scope Item 49X, Zusatzlizenz FSM).",
+      "systemIds": ["S4", "FSM"], "objects": ["Serviceauftrag", "Service Call / Aktivität (FSM)"], "apps": [], "scopeItems": ["49X"], "sourceIds": ["SRC-L-FSM-INT"],
+      "keywords": ["Integration", "Schnittstelle", "FSM"], "marker": "SAP_STANDARD"
+    },
+    {
+      "id": "F03", "type": "userTask", "name": "Einsatz planen & disponieren (Skills, Gebiet, Route)", "laneId": "L_DISP", "areaId": "DISPATCH",
+      "description": "Disponent plant Einsätze auf der Plantafel nach Qualifikation, Gebiet, Auslastung und Route; Techniker und Termin gehen an S/4HANA zurück.",
+      "systemIds": ["FSM"], "objects": ["Aktivität", "Einsatz", "Ressource"], "apps": ["Planning & Dispatching Board (FSM)"], "scopeItems": ["49X"], "sourceIds": ["SRC-L-FSM", "SRC-P-FSMJOULE"],
+      "keywords": ["Disposition", "Zuteilung", "Zuteilungsvorschlag", "Einsatzplanung", "Monteur", "Tour", "Route", "Routenoptimierung", "Tagesroute", "Termin", "Auslastung", "Skills", "Gebiet", "Auftragsbestand", "Resteprozess"], "marker": "SAP_STANDARD"
+    },
+    {
+      "id": "F04", "type": "sendTask", "name": "Termin bestätigen & Kunden informieren", "laneId": "L_DISP", "areaId": "DISPATCH",
+      "description": "Kunde erhält Termin bzw. ETA des Technikers.",
+      "systemIds": ["FSM", "PORTAL"], "objects": ["Termin"], "apps": [], "scopeItems": [], "sourceIds": ["SRC-V128"],
+      "customerOutbound": "Termin / ETA", "keywords": ["Terminbestätigung", "Benachrichtigung", "ETA", "Anmeldung"],
+      "note": "Standard-Kundenbenachrichtigung aus FSM bzw. Portal je Produkt prüfen.", "marker": "ZU_VERIFIZIEREN"
+    },
+    {
+      "id": "F05", "type": "userTask", "name": "Einsatz vorbereiten (Briefing, Teile an Bord)", "laneId": "L_TECH", "areaId": "EXECUTION",
+      "description": "Techniker sichtet Auftrag, Historie, Besonderheiten beim Kunden und benötigte Teile.",
+      "systemIds": ["FSM"], "objects": ["Aktivität", "Equipment-Historie"], "apps": ["Field Service App (FSA)"], "scopeItems": [], "sourceIds": ["SRC-V128"],
+      "keywords": ["Zusammenfassung", "Auftragsinformationen", "Briefing", "Besonderheiten", "Kontaktdaten", "Anmeldung", "Vorbereitung"], "marker": "ABGELEITET"
+    },
+    {
+      "id": "F06", "type": "userTask", "name": "Arbeit vor Ort durchführen & dokumentieren", "laneId": "L_TECH", "areaId": "EXECUTION",
+      "description": "Durchführung mit der mobilen App: Checklisten (Smartforms), Zeiten, Material, Unterschrift des Kunden.",
+      "systemIds": ["FSM"], "objects": ["Aktivität", "Checkliste", "Zeitrückmeldung", "Materialrückmeldung"], "apps": ["Field Service App (FSA)"], "scopeItems": ["49X"], "sourceIds": ["SRC-L-FSM", "SRC-V128"],
+      "keywords": ["vor Ort", "Montage", "Checkliste", "Dokumentation", "Unterschrift", "mobile"], "marker": "SAP_STANDARD"
+    },
+    {
+      "id": "F07", "type": "serviceTask", "name": "Rückmeldung an S/4HANA (Servicerückmeldung)", "laneId": "L_TECH", "areaId": "CLOSE",
+      "description": "FSM-Rückmeldung (Zeit, Spesen, Material) erzeugt die Servicerückmeldung in S/4HANA; Folgebelege für CO, Warenbewegung und Fakturaanforderung.",
+      "systemIds": ["FSM", "S4"], "objects": ["Servicerückmeldung"], "apps": [], "scopeItems": ["49X"], "sourceIds": ["SRC-L-FSM-INT"],
+      "keywords": ["Rückmeldung", "Auftragsrückmeldung", "Funk", "Qualitätssicherung", "Plausibilisierung"], "marker": "SAP_STANDARD"
+    },
+    {
+      "id": "F08", "type": "userTask", "name": "Ersatz- und Altteile zurückführen", "laneId": "L_LOG", "areaId": "CLOSE",
+      "description": "Nicht verbaute Ersatzteile bzw. Altteile werden ins Lager zurückgeführt (optional).",
+      "systemIds": ["S4LOG"], "objects": ["Rücklieferung", "Umbuchung"], "apps": [], "scopeItems": [], "sourceIds": ["SRC-V128"],
+      "keywords": ["Teilerückführung", "Altteile", "Rücklieferung"], "marker": "ABGELEITET"
+    },
+    { "id": "G_BILL", "type": "exclusiveGateway", "name": "", "laneId": "L_FIN", "areaId": "CLOSE", "description": "Zusammenführung In-House / Field Service", "systemIds": [], "objects": [], "apps": [], "scopeItems": [], "sourceIds": [], "marker": "SAP_STANDARD" },
+    { "id": "G_CHG", "type": "exclusiveGateway", "name": "Kostenpflichtige Leistung?", "laneId": "L_FIN", "areaId": "CLOSE", "description": "Garantie, Vertrag oder unreparierte Rücksendung führen zu keiner (oder nur einer Diagnose-)Faktura.", "systemIds": [], "objects": [], "apps": [], "scopeItems": [], "sourceIds": [], "marker": "SAP_STANDARD" },
+    {
+      "id": "B01", "type": "userTask", "name": "Fakturaanforderung prüfen & Faktura erstellen", "laneId": "L_FIN", "areaId": "CLOSE",
+      "description": "Fakturaanforderung (Billing Document Request) prüfen und Faktura erzeugen; Festpreis aus dem Serviceauftrag oder aufwandsbezogen (bei Advanced Execution über DIP).",
+      "systemIds": ["S4"], "objects": ["Fakturaanforderung", "Faktura"], "apps": [], "scopeItems": [], "sourceIds": ["SRC-L-CONF-BILL", "SRC-L-FSM", "SRC-L-AE"],
+      "customerOutbound": "Rechnung", "keywords": ["Faktura", "Rechnung", "Abrechnung", "Fakturierung"], "marker": "SAP_STANDARD"
+    },
+    {
+      "id": "B02", "type": "serviceTask", "name": "Kosten & Erlöse abrechnen", "laneId": "L_FIN", "areaId": "CLOSE",
+      "description": "Kosten und Erlöse in Controlling bzw. Ergebnisrechnung; bei positionsbezogener Kontierung Erlösrealisierung je Auftragsposition.",
+      "systemIds": ["S4"], "objects": ["Kosten", "Erlöse", "Ergebnisrechnung"], "apps": [], "scopeItems": [], "sourceIds": ["SRC-L-3XK", "SRC-L-AE"],
+      "keywords": ["Controlling", "Abrechnung", "Profitabilität", "Marge", "Settlement"], "marker": "SAP_STANDARD"
+    },
+    { "id": "G_DONE", "type": "exclusiveGateway", "name": "", "laneId": "L_CS", "areaId": "CLOSE", "description": "Zusammenführung", "systemIds": [], "objects": [], "apps": [], "scopeItems": [], "sourceIds": [], "marker": "SAP_STANDARD" },
+    {
+      "id": "C01", "type": "sendTask", "name": "Case abschließen & Kunden informieren", "laneId": "L_CS", "areaId": "CASE",
+      "description": "Case schließen, Kunde über Ergebnis informieren und Feedback einholen.",
+      "systemIds": ["SC2"], "objects": ["Case", "Umfrage"], "apps": [], "scopeItems": [], "sourceIds": ["SRC-V128"],
+      "customerOutbound": "Abschluss & Feedbackanfrage", "keywords": ["Kundenzufriedenheit", "Feedback", "Abschlussmeldung"], "marker": "ABGELEITET"
+    },
+    {
+      "id": "C02", "type": "userTask", "name": "Service auswerten: Qualität, Profitabilität, Folgegeschäft", "laneId": "L_PLAN", "areaId": "CLOSE",
+      "description": "Auswertung von Qualität, Profitabilität und Wiederholfehlern; Wissen sichern; Folgegeschäft (Austausch, Wartungsvertrag) anstoßen.",
+      "systemIds": ["S4", "SC2"], "objects": ["Auswertung", "Opportunity", "Wartungsplan"], "apps": [], "scopeItems": ["43B (Service Monitoring and Analytics)"], "sourceIds": ["SRC-V128", "SRC-KICKOFF"],
+      "keywords": ["Auswertung", "Analyse", "Auffälligkeiten", "Muster", "Kennzahlen", "Profitabilität", "Upsell", "Wartungsvertrag", "Wissen"], "marker": "ABGELEITET"
+    },
+    { "id": "C03", "type": "endEvent", "name": "Service abgeschlossen", "laneId": "L_PLAN", "areaId": "CLOSE", "description": "", "systemIds": [], "objects": [], "apps": [], "scopeItems": [], "sourceIds": [], "marker": "SAP_STANDARD" }
+  ],
+  "flows": [
+    { "id": "f01", "from": "E01", "to": "E03" },
+    { "id": "f02", "from": "E02", "to": "E04" },
+    { "id": "f03", "from": "E03", "to": "E04" },
+    { "id": "f04", "from": "E04", "to": "E05" },
+    { "id": "f05", "from": "E05", "to": "E06" },
+    { "id": "f06", "from": "E06", "to": "E07", "label": "ja" },
+    { "id": "f07", "from": "E06", "to": "E09", "label": "nein", "isDefault": true },
+    { "id": "f08", "from": "E07", "to": "E08" },
+    { "id": "f09", "from": "E09", "to": "E10" },
+    { "id": "f10", "from": "E10", "to": "E11" },
+    { "id": "f11", "from": "E11", "to": "E12", "label": "In-House" },
+    { "id": "f12", "from": "E11", "to": "F01", "label": "vor Ort" },
+    { "id": "f13", "from": "E12", "to": "E13" },
+    { "id": "f14", "from": "E13", "to": "E14" },
+    { "id": "f15", "from": "E14", "to": "E15" },
+    { "id": "f16", "from": "E15", "to": "E16" },
+    { "id": "f17", "from": "E16", "to": "E17", "label": "reparieren", "isDefault": true },
+    { "id": "f18", "from": "E16", "to": "E26J", "label": "unrepariert zurück" },
+    { "id": "f19", "from": "E17", "to": "E18", "label": "kostenpflichtig" },
+    { "id": "f20", "from": "E17", "to": "E20J", "label": "Garantie / Vertrag", "isDefault": true },
+    { "id": "f21", "from": "E18", "to": "E19" },
+    { "id": "f22", "from": "E19", "to": "E20J", "label": "angenommen", "isDefault": true },
+    { "id": "f23", "from": "E19", "to": "E26J", "label": "abgelehnt" },
+    { "id": "f24", "from": "E20J", "to": "E20" },
+    { "id": "f25", "from": "E20", "to": "E21" },
+    { "id": "f26", "from": "E21", "to": "E22" },
+    { "id": "f27", "from": "E22", "to": "E23" },
+    { "id": "f28", "from": "E23", "to": "E24" },
+    { "id": "f29", "from": "E24", "to": "E26J" },
+    { "id": "f30", "from": "E26J", "to": "E26" },
+    { "id": "f31", "from": "E26", "to": "E27" },
+    { "id": "f32", "from": "E27", "to": "G_BILL" },
+    { "id": "f33", "from": "F01", "to": "F02" },
+    { "id": "f34", "from": "F02", "to": "F03" },
+    { "id": "f35", "from": "F03", "to": "F04" },
+    { "id": "f36", "from": "F04", "to": "F05" },
+    { "id": "f37", "from": "F05", "to": "F06" },
+    { "id": "f38", "from": "F06", "to": "F07" },
+    { "id": "f39", "from": "F07", "to": "F08" },
+    { "id": "f40", "from": "F08", "to": "G_BILL" },
+    { "id": "f41", "from": "G_BILL", "to": "G_CHG" },
+    { "id": "f42", "from": "G_CHG", "to": "B01", "label": "ja" },
+    { "id": "f43", "from": "G_CHG", "to": "G_DONE", "label": "nein", "isDefault": true },
+    { "id": "f44", "from": "B01", "to": "B02" },
+    { "id": "f45", "from": "B02", "to": "G_DONE" },
+    { "id": "f46", "from": "G_DONE", "to": "C01" },
+    { "id": "f47", "from": "C01", "to": "C02" },
+    { "id": "f48", "from": "C02", "to": "C03" }
+  ],
+  "changelog": [{ "at": "2026-10-20", "by": "Plattform (Recherche)", "summary": "E2E-Serviceprozess aus SAP-Quellen und TG-Folien modelliert" }]
+}

@@ -1,0 +1,227 @@
+{
+  "title": "TG KI im Service",
+  "subtitle": "Arbeitsplattform der Themengruppe – Serviceprozess, SAP-Agenten, Agentenlücken und Anforderungen der Unternehmen",
+  "version": "0.1.0",
+  "updatedAt": "2026-10-20",
+  "tg": {
+    "name": "Themengruppe „KI im Service“ – Autonomous Service Management",
+    "context": "Gemeinsame Themengruppe von Anwenderunternehmen und SAP im Umfeld des Arbeitskreises Servicemanagement: KI-Use-Cases sammeln, bestehende und geplante SAP-Agenten bewerten, neue Use Cases und Optimierungsvorschläge priorisieren und an SAP zur Entwicklung übergeben.",
+    "workingMode": "~20 aktive Mitglieder; Webinare und/oder Präsenztermine mit SAP-Beteiligung (ca. 1 Tag/Monat); Sprecherteam koordiniert Teilaufgaben und Qualitätssicherung (ca. 1–2 Tage/Monat) und vertritt die Interessen gegenüber SAP.",
+    "contacts": [
+      {
+        "role": "Organisation & Arbeitsweise (Kick-off)",
+        "name": "Dirk Büttgenbach",
+        "organisation": "SEC Service Enterprise Consulting GmbH – stellv. Sprecher AK Servicemanagement"
+      },
+      {
+        "role": "Ansprechpartner SAP",
+        "name": "Dr. Oliver Frick",
+        "organisation": "SAP – Product Management Private Cloud, Service & Asset Management"
+      }
+    ],
+    "relatedGroups": [
+      "Arbeitskreis Servicemanagement (regelmäßiger Austausch)",
+      "Arbeitskreis Instandhaltungsmanagement (regelmäßiger Austausch)",
+      "Arbeitskreis Customer Experience (regelmäßiger Austausch)",
+      "Arbeitskreis Finance/Controlling (themenspezifisch)",
+      "Arbeitsgruppe Mitarbeitereinsatzplanung (themenspezifisch)",
+      "Arbeitsgruppe Mobile Instandhaltung (themenspezifisch)"
+    ]
+  },
+  "phases": [
+    {
+      "id": "P0",
+      "name": "Phase 0 – Start",
+      "items": [
+        "Informationsveranstaltung zur Themengruppe",
+        "Bildung Kernteam",
+        "Bildung Sprecherteam"
+      ]
+    },
+    {
+      "id": "P1",
+      "name": "Phase 1 – Sammlung",
+      "items": [
+        "Sammlung KI-Use-Cases",
+        "Vorstellung bestehender/geplanter KI Agents & Assistants durch SAP"
+      ]
+    },
+    {
+      "id": "P2",
+      "name": "Phase 2 – Bewertung",
+      "items": [
+        "Bestehende/geplante SAP-Agenten bewerten",
+        "Feedback zur Optimierung bestehender Agenten",
+        "Neue KI-Use-Cases aus dem Gremium ausarbeiten"
+      ]
+    },
+    {
+      "id": "P3",
+      "name": "Phase 3 – Priorisierung & Übergabe",
+      "items": [
+        "Priorisierung neuer KI-Use-Cases",
+        "Übergabe neuer Use Cases an SAP",
+        "Übergabe Optimierungsvorschläge an SAP"
+      ]
+    },
+    {
+      "id": "P4",
+      "name": "Phase 4 – Realisierung",
+      "items": [
+        "Realisierung in Iterationen",
+        "Gemeinsame Tests"
+      ]
+    }
+  ],
+  "currentPhase": "P1",
+  "stages": [
+    {
+      "id": "ENGAGE",
+      "name": "Engage",
+      "description": "Kundenkontakt, Case Management, Service-Optimierung"
+    },
+    {
+      "id": "MANAGE",
+      "name": "Manage",
+      "description": "Serviceplanung und -abwicklung: Umfang, Garantie, Angebot, Auftrag, In-House Service"
+    },
+    {
+      "id": "SCHEDULE_EXECUTE",
+      "name": "Schedule & Execute",
+      "description": "Einsatzplanung, Disposition und Durchführung (Werkstatt und vor Ort)"
+    },
+    {
+      "id": "CONFIRM_IMPROVE",
+      "name": "Confirm & Improve",
+      "description": "Rückmeldung, Faktura, Abschluss, Lernen und Verbessern"
+    }
+  ],
+  "areas": [
+    {
+      "id": "CASE",
+      "no": "01",
+      "name": "Case Management",
+      "nameDe": "Case Management",
+      "stage": "ENGAGE",
+      "claim": "Resolve cases faster with less effort",
+      "product": "SAP Service Cloud V2"
+    },
+    {
+      "id": "OPTIMIZATION",
+      "no": "02",
+      "name": "Service Optimization",
+      "nameDe": "Service-Optimierung",
+      "stage": "ENGAGE",
+      "claim": "Deliver the right answers faster",
+      "product": "SAP Service Cloud V2"
+    },
+    {
+      "id": "PLANNING",
+      "no": "03",
+      "name": "Service Planning and Operations",
+      "nameDe": "Serviceplanung & -abwicklung",
+      "stage": "MANAGE",
+      "claim": "Define scope, safety and profitability",
+      "product": "SAP Cloud ERP (S/4HANA Service)"
+    },
+    {
+      "id": "DISPATCH",
+      "no": "04",
+      "name": "Scheduling and Dispatching",
+      "nameDe": "Einsatzplanung & Disposition",
+      "stage": "SCHEDULE_EXECUTE",
+      "claim": "Optimize capacity, resources and routes",
+      "product": "SAP Field Service Management"
+    },
+    {
+      "id": "EXECUTION",
+      "no": "05",
+      "name": "Work Execution",
+      "nameDe": "Durchführung",
+      "stage": "SCHEDULE_EXECUTE",
+      "claim": "Guide and support work in the field",
+      "product": "SAP Field Service Management"
+    },
+    {
+      "id": "CLOSE",
+      "no": "06",
+      "name": "Confirm & Close",
+      "nameDe": "Rückmeldung & Abschluss",
+      "stage": "CONFIRM_IMPROVE",
+      "claim": "Capture outcomes and settle invoices",
+      "product": "SAP Cloud ERP (S/4HANA Service)"
+    },
+    {
+      "id": "ADMIN",
+      "no": "–",
+      "name": "Administration",
+      "nameDe": "Administration",
+      "stage": "CONFIRM_IMPROVE",
+      "claim": "Configure and customize for best system performance",
+      "product": "übergreifend"
+    },
+    {
+      "id": "QUERSCHNITT",
+      "no": "–",
+      "name": "Operation Monitoring & Resolution",
+      "nameDe": "Querschnitt / Service Control Tower",
+      "stage": "CONFIRM_IMPROVE",
+      "claim": "AI assisted Service Monitor über den gesamten Prozess",
+      "product": "übergreifend"
+    }
+  ],
+  "systems": [
+    {
+      "id": "SC2",
+      "short": "SC V2",
+      "name": "SAP Service Cloud V2",
+      "description": "Interaktion, Case Management, Wissensdatenbank, Kundenservice"
+    },
+    {
+      "id": "S4",
+      "short": "S/4",
+      "name": "SAP S/4HANA Service (Cloud ERP)",
+      "description": "Serviceanfrage, -angebot, -auftrag, In-House Service, Rückmeldung, Garantie, Verträge, Fakturierung"
+    },
+    {
+      "id": "S4LOG",
+      "short": "S/4 Log",
+      "name": "SAP S/4HANA Logistik",
+      "description": "Retourenauftrag, Wareneingang/-ausgang, Auslieferung, Bestandsführung, Beschaffung"
+    },
+    {
+      "id": "FSM",
+      "short": "FSM",
+      "name": "SAP Field Service Management",
+      "description": "Einsatzplanung, Disposition, Routen, mobile Durchführung (FSA)"
+    },
+    {
+      "id": "JOULE",
+      "short": "Joule",
+      "name": "SAP Joule / Business AI Platform",
+      "description": "Joule Work, Joule Assistants, Joule Agents, Joule Studio"
+    },
+    {
+      "id": "PORTAL",
+      "short": "Portal",
+      "name": "Kundenportal / Self-Service",
+      "description": "Self-Service des Kunden (Digital Service Agent)"
+    }
+  ],
+  "categories": [
+    "Ticketbearbeitung",
+    "Kundenkommunikation & Self-Service",
+    "Auftragserstellung",
+    "Auftragsdisposition",
+    "Material & Ersatzteile",
+    "In-House Service / Werkstatt",
+    "Durchführung & Techniker",
+    "Auftragsrückmeldungen / Funk",
+    "Fakturierung & Abschluss",
+    "Verträge & Garantie",
+    "Auswertung & Steuerung",
+    "Support",
+    "Sonstiges"
+  ],
+  "confidentiality": "Inhalte aus den SAP-Folien der Themengruppe (Kick-off 07/2026, V128 10/2026) sind als INTERNAL bzw. „Lab Preview – no actual product“ gekennzeichnet. Nur im Kreis der Themengruppe teilen; keine Produktzusage der SAP."
+}

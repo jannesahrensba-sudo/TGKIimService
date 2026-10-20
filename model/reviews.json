@@ -1,0 +1,513 @@
+[
+ {
+  "requirementId": "ANF-001",
+  "status": "EINGEREICHT",
+  "assessment": {
+   "fit": "TEIL_FIT",
+   "summary": "Disposition ist durch SAP-Agenten adressiert – Brunata-Regeln (Auftragsart, Resteprozess) offen.",
+   "rationale": "Der Field Service Dispatcher Agent (SAP FSM, verfügbar, AI Units) ordnet Ressourcen auf Echtzeitdaten zu; im V128-Stand kommen Service and Maintenance Dispatching Agent und Scheduling Policy Management Agent (Lab Preview) hinzu. Ob unternehmensspezifische Regeln wie Resteprozess und Auftragsart als Planungsregeln abbildbar sind, ist nicht belegt.",
+   "nodeIds": [
+    "F03"
+   ],
+   "sapAgentIds": [
+    "AG_FSM_DISPATCHER",
+    "AG_DISPATCH",
+    "AG_SCHED_POLICY"
+   ],
+   "standardReference": "SAP FSM Planung & Disposition (Scope Item 49X)",
+   "recommendation": "Als Anforderung an den Dispatching Agent formulieren: konfigurierbare Regeln (Auslastung, Gebiet, Skills, Auftragsart, Resteprozess). Pilot mit dem Field Service Dispatcher Agent prüfen.",
+   "verify": [
+    "Lizenz/AI Units des Field Service Dispatcher Agent",
+    "Abbildbarkeit des Resteprozesses als Scheduling Policy"
+   ],
+   "assessedBy": "Erstabgleich der Plattform (Vorschlag)",
+   "assessedAt": "2026-10-20",
+   "confirmed": false,
+   "marker": "ABGELEITET"
+  },
+  "history": [
+   {
+    "at": "2026-10-20",
+    "by": "Agenten-Hooks-Liste (Brunata Metrona)",
+    "action": "Eingereicht",
+    "status": "EINGEREICHT"
+   },
+   {
+    "at": "2026-10-20",
+    "by": "Erstabgleich der Plattform",
+    "action": "Abgleich vorgeschlagen (unbestätigt)"
+   }
+  ],
+  "updatedAt": "2026-10-20",
+  "updatedBy": "Erstabgleich der Plattform"
+ },
+ {
+  "requirementId": "ANF-002",
+  "status": "EINGEREICHT",
+  "assessment": {
+   "fit": "SAP_AGENT_GEPLANT",
+   "summary": "Technician Briefing Agent fasst Auftragskontext zusammen – Nutzen für die Disposition anfragen.",
+   "rationale": "Der Technician Briefing Agent (Lab Preview) liefert dem Techniker vollständigen Kontext und eine vermutete Fehlerursache. Brunata sieht den Nutzen im Service eher bei der Auftragszuteilung – also für den Disponenten bzw. Innendienst.",
+   "nodeIds": [
+    "F05",
+    "F03"
+   ],
+   "sapAgentIds": [
+    "AG_TECH_BRIEF"
+   ],
+   "standardReference": "SAP FSM Field Service App (Durchführung)",
+   "recommendation": "Feedback an SAP: Briefing-Funktion auch für Disposition/Innendienst bereitstellen (Besonderheiten der Anmeldung, Kontaktdaten, besondere Anforderungen).",
+   "verify": [
+    "Abgrenzung zum geMO-Kontext (unternehmensintern) klären"
+   ],
+   "assessedBy": "Erstabgleich der Plattform (Vorschlag)",
+   "assessedAt": "2026-10-20",
+   "confirmed": false,
+   "marker": "ABGELEITET"
+  },
+  "history": [
+   {
+    "at": "2026-10-20",
+    "by": "Agenten-Hooks-Liste (Brunata Metrona)",
+    "action": "Eingereicht",
+    "status": "EINGEREICHT"
+   },
+   {
+    "at": "2026-10-20",
+    "by": "Erstabgleich der Plattform",
+    "action": "Abgleich vorgeschlagen (unbestätigt)"
+   }
+  ],
+  "updatedAt": "2026-10-20",
+  "updatedBy": "Erstabgleich der Plattform"
+ },
+ {
+  "requirementId": "ANF-003",
+  "status": "EINGEREICHT",
+  "assessment": {
+   "fit": "SAP_AGENT_GEPLANT",
+   "summary": "Prozessmonitoring (Service Control Tower) geplant – Kritikalitätskriterien sind unternehmensspezifisch.",
+   "rationale": "Der AI assisted Service Monitor bzw. Operation Monitoring & Resolution / Service Control Tower (WIP/Lab Preview) zielt auf prozessübergreifende Ausnahmen; der Escalation Agent erkennt eskalationsgefährdete Cases. Kriterien wie Reklamationen, Überfälligkeit oder „Rest auf Rest“ sind unternehmensspezifisch.",
+   "nodeIds": [
+    "F03",
+    "E20"
+   ],
+   "sapAgentIds": [
+    "AG_MONITOR",
+    "AG_ESCAL"
+   ],
+   "standardReference": "S/4HANA Service Monitoring and Analytics (43B)",
+   "recommendation": "Kriterienkatalog für Kritikalität als Anforderung an SAP geben; Abgrenzung Service Control Tower / Escalation Agent klären.",
+   "verify": [
+    "Funktionsumfang des Service Control Tower"
+   ],
+   "assessedBy": "Erstabgleich der Plattform (Vorschlag)",
+   "assessedAt": "2026-10-20",
+   "confirmed": false,
+   "marker": "ABGELEITET"
+  },
+  "history": [
+   {
+    "at": "2026-10-20",
+    "by": "Agenten-Hooks-Liste (Brunata Metrona)",
+    "action": "Eingereicht",
+    "status": "EINGEREICHT"
+   },
+   {
+    "at": "2026-10-20",
+    "by": "Erstabgleich der Plattform",
+    "action": "Abgleich vorgeschlagen (unbestätigt)"
+   }
+  ],
+  "updatedAt": "2026-10-20",
+  "updatedBy": "Erstabgleich der Plattform"
+ },
+ {
+  "requirementId": "ANF-004",
+  "status": "EINGEREICHT",
+  "assessment": {
+   "fit": "STANDARD",
+   "summary": "Routen- und Tourenoptimierung ist eine Fähigkeit von SAP FSM.",
+   "rationale": "SAP führt „Dispatching & Route Optimization“ als Field-Service-Fähigkeit (V128, Folie 2); agentisch ergänzt durch den Workload and Capacity Optimization Agent (Lab Preview).",
+   "nodeIds": [
+    "F03"
+   ],
+   "sapAgentIds": [
+    "AG_WORKLOAD"
+   ],
+   "standardReference": "SAP FSM Dispatching & Route Optimization",
+   "recommendation": "Im Standard bewerten (Tagesrouten, Terminvorschläge); Abweichungen als Anforderung an den Workload/Capacity Optimization Agent.",
+   "verify": [
+    "Lieferumfang und Lizenz der Routenoptimierung in FSM"
+   ],
+   "assessedBy": "Erstabgleich der Plattform (Vorschlag)",
+   "assessedAt": "2026-10-20",
+   "confirmed": false,
+   "marker": "ABGELEITET"
+  },
+  "history": [
+   {
+    "at": "2026-10-20",
+    "by": "Agenten-Hooks-Liste (Brunata Metrona)",
+    "action": "Eingereicht",
+    "status": "EINGEREICHT"
+   },
+   {
+    "at": "2026-10-20",
+    "by": "Erstabgleich der Plattform",
+    "action": "Abgleich vorgeschlagen (unbestätigt)"
+   }
+  ],
+  "updatedAt": "2026-10-20",
+  "updatedBy": "Erstabgleich der Plattform"
+ },
+ {
+  "requirementId": "ANF-005",
+  "status": "EINGEREICHT",
+  "assessment": {
+   "fit": "TEIL_FIT",
+   "summary": "Reservierung/BANF im Standard; Umverteilungslogik ist nicht belegt.",
+   "rationale": "Im Standard entsteht bei Auftragsfreigabe eine Reservierung bzw. Bestellanforderung. Der Kick-off nannte Parts Logistics Monitor und Advance Shipment Monitor, die im V128-Stand nicht mehr separat auftauchen. Eine Umverteilung zwischen Lagern bzw. Fahrzeugbeständen beschreibt kein Agent.",
+   "nodeIds": [
+    "E21"
+   ],
+   "sapAgentIds": [
+    "AG_SO_PLAN",
+    "AG_KO_PARTS_MON"
+   ],
+   "standardReference": "Serviceauftrag: Ersatzteilpositionen mit Reservierung/BANF",
+   "recommendation": "Anforderung an SAP: Umverteilungsvorschläge (Lager-/Fahrzeugbestand) im Service Order Planning and Operations Agent; Verbleib des Parts Logistics Monitor klären.",
+   "verify": [
+    "Verbleib Parts Logistics Monitor / Advance Shipment Monitor"
+   ],
+   "assessedBy": "Erstabgleich der Plattform (Vorschlag)",
+   "assessedAt": "2026-10-20",
+   "confirmed": false,
+   "marker": "ABGELEITET"
+  },
+  "history": [
+   {
+    "at": "2026-10-20",
+    "by": "Agenten-Hooks-Liste (Brunata Metrona)",
+    "action": "Eingereicht",
+    "status": "EINGEREICHT"
+   },
+   {
+    "at": "2026-10-20",
+    "by": "Erstabgleich der Plattform",
+    "action": "Abgleich vorgeschlagen (unbestätigt)"
+   }
+  ],
+  "updatedAt": "2026-10-20",
+  "updatedBy": "Erstabgleich der Plattform",
+  "gapId": "GAP-07"
+ },
+ {
+  "requirementId": "ANF-006",
+  "status": "EINGEREICHT",
+  "assessment": {
+   "fit": "TEIL_FIT",
+   "summary": "Service Order Preparation Agent bereitet Aufträge vor – Prüfkriterien fehlen.",
+   "rationale": "Der Service Order Preparation Agent (Lab Preview) bereitet Aufträge aus Cases vor. Dublettenprüfung, Bündelung sowie die Berücksichtigung von Angeboten, Dauerdiensten und Kundenportal sind nicht beschrieben.",
+   "nodeIds": [
+    "E09",
+    "F01"
+   ],
+   "sapAgentIds": [
+    "AG_SO_PREP",
+    "AG_SO_PLAN"
+   ],
+   "standardReference": "Serviceauftrag anlegen (3D2)",
+   "recommendation": "Prüfkriterien (Dubletten, Bündelung, Angebote, Dauerdienste, Kundenportal) als Anforderung an den Service Order Preparation Agent übergeben.",
+   "verify": [],
+   "assessedBy": "Erstabgleich der Plattform (Vorschlag)",
+   "assessedAt": "2026-10-20",
+   "confirmed": false,
+   "marker": "ABGELEITET"
+  },
+  "history": [
+   {
+    "at": "2026-10-20",
+    "by": "Agenten-Hooks-Liste (Brunata Metrona)",
+    "action": "Eingereicht",
+    "status": "EINGEREICHT"
+   },
+   {
+    "at": "2026-10-20",
+    "by": "Erstabgleich der Plattform",
+    "action": "Abgleich vorgeschlagen (unbestätigt)"
+   }
+  ],
+  "updatedAt": "2026-10-20",
+  "updatedBy": "Erstabgleich der Plattform"
+ },
+ {
+  "requirementId": "ANF-007",
+  "status": "EINGEREICHT",
+  "assessment": {
+   "fit": "GAP",
+   "summary": "Branchenspezifisch – kein SAP-Agent für die Bedarfsprüfung periodischer Aufträge.",
+   "rationale": "Ablesung ist branchenspezifisch (Submetering) und nicht Teil des SAP-Serviceprozesses bzw. der genannten Service-Agenten.",
+   "nodeIds": [
+    "F01"
+   ],
+   "sapAgentIds": [],
+   "standardReference": "–",
+   "recommendation": "Als branchenspezifischen Use Case dokumentieren; in der TG prüfen, ob andere Unternehmen vergleichbare periodische Aufträge haben (Bezug Wartungspläne).",
+   "verify": [],
+   "assessedBy": "Erstabgleich der Plattform (Vorschlag)",
+   "assessedAt": "2026-10-20",
+   "confirmed": false,
+   "marker": "ABGELEITET"
+  },
+  "history": [
+   {
+    "at": "2026-10-20",
+    "by": "Agenten-Hooks-Liste (Brunata Metrona)",
+    "action": "Eingereicht",
+    "status": "EINGEREICHT"
+   },
+   {
+    "at": "2026-10-20",
+    "by": "Erstabgleich der Plattform",
+    "action": "Abgleich vorgeschlagen (unbestätigt)"
+   }
+  ],
+  "updatedAt": "2026-10-20",
+  "updatedBy": "Erstabgleich der Plattform",
+  "gapId": "GAP-06"
+ },
+ {
+  "requirementId": "ANF-008",
+  "status": "EINGEREICHT",
+  "assessment": {
+   "fit": "GAP",
+   "summary": "Freigabe ist Standard, autonome fachliche Freigabeprüfung durch einen Agenten nicht genannt.",
+   "rationale": "Die Auftragsfreigabe ist ein Standardschritt. Ein Agent, der Freigabeprüfungen (z. B. M-Bus-Anlagen, NEW-Aufträge, Hochrüstungen mit Ablesung) eigenständig durchführt, ist nicht genannt; der Business Rule Management Agent (Administration) pflegt Regeln, prüft aber keine Aufträge.",
+   "nodeIds": [
+    "F01",
+    "E20"
+   ],
+   "sapAgentIds": [
+    "AG_RULES"
+   ],
+   "standardReference": "Serviceauftrag freigeben",
+   "recommendation": "Neuen Use Case „Freigabe-Agent“ ausarbeiten (Regeln, Datenbasis, Leitplanken – Freigabe nur bei eindeutiger Regelerfüllung).",
+   "verify": [],
+   "assessedBy": "Erstabgleich der Plattform (Vorschlag)",
+   "assessedAt": "2026-10-20",
+   "confirmed": false,
+   "marker": "ABGELEITET"
+  },
+  "history": [
+   {
+    "at": "2026-10-20",
+    "by": "Agenten-Hooks-Liste (Brunata Metrona)",
+    "action": "Eingereicht",
+    "status": "EINGEREICHT"
+   },
+   {
+    "at": "2026-10-20",
+    "by": "Erstabgleich der Plattform",
+    "action": "Abgleich vorgeschlagen (unbestätigt)"
+   }
+  ],
+  "updatedAt": "2026-10-20",
+  "updatedBy": "Erstabgleich der Plattform",
+  "gapId": "GAP-05"
+ },
+ {
+  "requirementId": "ANF-009",
+  "status": "EINGEREICHT",
+  "assessment": {
+   "fit": "GAP",
+   "summary": "Kein Service-Agent für Mess-/Funkdatenanalyse mit Maßnahmenvorschlag.",
+   "rationale": "Zustandsbasierte Meldungen (IoT) sind als Einstiegskanal genannt; eine Analyse von Zählerwerten mit Mustererkennung und Maßnahmenvorschlag beschreibt kein SAP-Service-Agent. Der Service Notification Initiation Agent könnte Folgebelege anstoßen.",
+   "nodeIds": [
+    "E02",
+    "C02"
+   ],
+   "sapAgentIds": [
+    "AG_SN_INIT"
+   ],
+   "standardReference": "Condition-based Monitoring (Kick-off) / IoT-Kanal (V128)",
+   "recommendation": "Neuen Use Case „Messdaten-Agent“ an SAP adressieren; Schnittstelle zu Industry AI / Asset Management klären.",
+   "verify": [],
+   "assessedBy": "Erstabgleich der Plattform (Vorschlag)",
+   "assessedAt": "2026-10-20",
+   "confirmed": false,
+   "marker": "ABGELEITET"
+  },
+  "history": [
+   {
+    "at": "2026-10-20",
+    "by": "Agenten-Hooks-Liste (Brunata Metrona)",
+    "action": "Eingereicht",
+    "status": "EINGEREICHT"
+   },
+   {
+    "at": "2026-10-20",
+    "by": "Erstabgleich der Plattform",
+    "action": "Abgleich vorgeschlagen (unbestätigt)"
+   }
+  ],
+  "updatedAt": "2026-10-20",
+  "updatedBy": "Erstabgleich der Plattform",
+  "gapId": "GAP-04"
+ },
+ {
+  "requirementId": "ANF-010",
+  "status": "EINGEREICHT",
+  "assessment": {
+   "fit": "TEIL_FIT",
+   "summary": "Debriefing je Einsatz geplant – Mustererkennung über viele Rückmeldungen nicht beschrieben.",
+   "rationale": "Der Service Debriefing Agent (Lab Preview) bereitet Einsätze nach, der Work Execution Agent erfasst Zeiten und Teile automatisch. Eine Analyse vieler Rückmeldungen mit Mustererkennung und Maßnahmenvorschlag ist nicht beschrieben.",
+   "nodeIds": [
+    "F07",
+    "E23"
+   ],
+   "sapAgentIds": [
+    "AG_DEBRIEF",
+    "AG_WORK_EXEC"
+   ],
+   "standardReference": "Servicerückmeldung (49X)",
+   "recommendation": "Feedback an SAP: Debriefing um Plausibilitätsregeln und Musteranalyse über Rückmeldungen erweitern.",
+   "verify": [],
+   "assessedBy": "Erstabgleich der Plattform (Vorschlag)",
+   "assessedAt": "2026-10-20",
+   "confirmed": false,
+   "marker": "ABGELEITET"
+  },
+  "history": [
+   {
+    "at": "2026-10-20",
+    "by": "Agenten-Hooks-Liste (Brunata Metrona)",
+    "action": "Eingereicht",
+    "status": "EINGEREICHT"
+   },
+   {
+    "at": "2026-10-20",
+    "by": "Erstabgleich der Plattform",
+    "action": "Abgleich vorgeschlagen (unbestätigt)"
+   }
+  ],
+  "updatedAt": "2026-10-20",
+  "updatedBy": "Erstabgleich der Plattform"
+ },
+ {
+  "requirementId": "ANF-011",
+  "status": "EINGEREICHT",
+  "assessment": {
+   "fit": "SAP_AGENT_GEPLANT",
+   "summary": "Case Preparation Agent und Case Summary adressieren die Anreicherung – Datenquellen klären.",
+   "rationale": "Der Case Preparation Agent (Lab Preview) zieht Asset-Historie und priorisiert; Case Summary (verfügbar, Joule Premium for CX) fasst Interaktionen zusammen. Unternehmensspezifische Recherchen (SvO, Pünktlichkeit, Bearbeitungsverlauf des Geräts) brauchen Zugriff auf die Historie in S/4HANA.",
+   "nodeIds": [
+    "E04",
+    "E05"
+   ],
+   "sapAgentIds": [
+    "AG_CASE_PREP",
+    "KF_CASE_SUM",
+    "AG_EQUIP_INS"
+   ],
+   "standardReference": "Service Cloud V2 Case Management",
+   "recommendation": "Benötigte Datenquellen (Gerätehistorie, Termintreue) als Anforderung an den Case Preparation Agent formulieren.",
+   "verify": [
+    "Begriff „SvO“ für die TG erläutern (unternehmensintern)"
+   ],
+   "assessedBy": "Erstabgleich der Plattform (Vorschlag)",
+   "assessedAt": "2026-10-20",
+   "confirmed": false,
+   "marker": "ABGELEITET"
+  },
+  "history": [
+   {
+    "at": "2026-10-20",
+    "by": "Agenten-Hooks-Liste (Brunata Metrona)",
+    "action": "Eingereicht",
+    "status": "EINGEREICHT"
+   },
+   {
+    "at": "2026-10-20",
+    "by": "Erstabgleich der Plattform",
+    "action": "Abgleich vorgeschlagen (unbestätigt)"
+   }
+  ],
+  "updatedAt": "2026-10-20",
+  "updatedBy": "Erstabgleich der Plattform"
+ },
+ {
+  "requirementId": "ANF-012",
+  "status": "EINGEREICHT",
+  "assessment": {
+   "fit": "TEIL_FIT",
+   "summary": "E-Mail-Entwürfe nennt SAP als Nutzen – konkrete Funktion und Verfügbarkeit offen.",
+   "rationale": "SAP nennt 80 % Zeitersparnis beim Verfassen von E-Mails (Referenz Döhler, V128 Folie 6/10). Welcher Agent bzw. welche Funktion das liefert und ob sie für den Innendienst im S/4-Kontext nutzbar ist, ist nicht benannt.",
+   "nodeIds": [
+    "E05",
+    "E07"
+   ],
+   "sapAgentIds": [
+    "AG_CASE_ACTION",
+    "KF_CASE_SUM"
+   ],
+   "standardReference": "Service Cloud V2 Case Management",
+   "recommendation": "Bei SAP Funktion, Lizenz und Datenbasis der E-Mail-Entwürfe erfragen; Anforderung um Systemdaten aus S/4HANA ergänzen.",
+   "verify": [
+    "Welche Service-Cloud-Funktion liefert E-Mail-Entwürfe? Lizenz?"
+   ],
+   "assessedBy": "Erstabgleich der Plattform (Vorschlag)",
+   "assessedAt": "2026-10-20",
+   "confirmed": false,
+   "marker": "ABGELEITET"
+  },
+  "history": [
+   {
+    "at": "2026-10-20",
+    "by": "Agenten-Hooks-Liste (Brunata Metrona)",
+    "action": "Eingereicht",
+    "status": "EINGEREICHT"
+   },
+   {
+    "at": "2026-10-20",
+    "by": "Erstabgleich der Plattform",
+    "action": "Abgleich vorgeschlagen (unbestätigt)"
+   }
+  ],
+  "updatedAt": "2026-10-20",
+  "updatedBy": "Erstabgleich der Plattform"
+ },
+ {
+  "requirementId": "ANF-013",
+  "status": "EINGEREICHT",
+  "assessment": {
+   "fit": "OFFEN",
+   "summary": "Laut Anmerkung kein Service-Anwendungsfall.",
+   "rationale": "Das Unternehmen merkt selbst an, dass es sich vermutlich um einen anderweitigen Anwendungsfall handelt.",
+   "nodeIds": [],
+   "sapAgentIds": [],
+   "standardReference": "–",
+   "recommendation": "Zurückstellen bzw. an das zuständige Gremium verweisen.",
+   "verify": [],
+   "assessedBy": "Erstabgleich der Plattform (Vorschlag)",
+   "assessedAt": "2026-10-20",
+   "confirmed": false,
+   "marker": "ABGELEITET"
+  },
+  "history": [
+   {
+    "at": "2026-10-20",
+    "by": "Agenten-Hooks-Liste (Brunata Metrona)",
+    "action": "Eingereicht",
+    "status": "EINGEREICHT"
+   },
+   {
+    "at": "2026-10-20",
+    "by": "Erstabgleich der Plattform",
+    "action": "Abgleich vorgeschlagen (unbestätigt)"
+   }
+  ],
+  "updatedAt": "2026-10-20",
+  "updatedBy": "Erstabgleich der Plattform"
+ }
+]
