@@ -43,6 +43,8 @@ function Boot() {
   );
 }
 
+// Im Artifact liefert die Plattform das <html>-Gerüst – Sprache hier setzen
+document.documentElement.lang = 'de';
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <Boot />

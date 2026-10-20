@@ -1,6 +1,8 @@
 /**
  * Fasst den Artifact-Build (vite build --mode artifact) zu einer einzigen Datei zusammen:
- * dist-artifact/index.html mit eingebettetem JavaScript und CSS – zum Veröffentlichen als Claude-Artifact.
+ * dist-artifact/index.html mit eingebettetem JavaScript und CSS (lokal im Browser zu öffnen) und
+ * dist-artifact/tg-ki-im-service.html ohne Dokumentgerüst – die Fassung zum Veröffentlichen als Claude-Artifact
+ * (die Plattform ergänzt doctype, head und body selbst).
  */
 import { promises as fs } from 'node:fs';
 import path from 'node:path';
@@ -34,4 +36,13 @@ if (/src="\.?\/?assets\//.test(html) || /href="\.?\/?assets\//.test(html)) throw
 
 await fs.writeFile(file, html, 'utf8');
 await fs.rm(path.join(dir, 'assets'), { recursive: true });
+
+const pick = (re: RegExp, what: string) => html.match(re)?.[1] ?? (() => { throw new Error(`${what} fehlt`); })();
+const head = pick(/<head>([\s\S]*?)<\/head>/, 'head')
+  .replace(/<meta charset[^>]*>\s*/, '')
+  .replace(/<meta name="viewport"[^>]*>\s*/, '');
+const fragment = `${head.trim()}\n${pick(/<body>([\s\S]*?)<\/body>/, 'body').trim()}\n`;
+if (!fragment.startsWith('<title>')) throw new Error('<title> muss am Anfang stehen');
+await fs.writeFile(path.join(dir, 'tg-ki-im-service.html'), fragment, 'utf8');
 console.log(`dist-artifact/index.html – ${(Buffer.byteLength(html) / 1024 / 1024).toFixed(2)} MB, eingebettet: ${inlined.join(', ')}`);
+console.log('dist-artifact/tg-ki-im-service.html – Fassung für das Artifact');

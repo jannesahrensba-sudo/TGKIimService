@@ -98,7 +98,8 @@ export async function runSampleAgent(req: AgentTurnInput, model: TgModel, hooks:
         if (!parsed.success) throw new Error(parsed.error.issues.slice(0, 3).map((x) => `${x.path.join('.')} ${x.message}`).join('; '));
         hooks.onTool?.(t.name);
         toolCalls.push({ name: t.name, ok: true });
-        return toolText(await t.run(ctx, parsed.data as never), 30000);
+        // Ergebnis höchstens 32 KB (Umlaute zählen doppelt)
+        return toolText(await t.run(ctx, parsed.data as never), 24000);
       },
     };
   });
@@ -110,7 +111,7 @@ export async function runSampleAgent(req: AgentTurnInput, model: TgModel, hooks:
   let reply = '';
   try {
     if (limits?.tools) {
-      const r = await sample(turns, { tools, signal: hooks.signal, onText: ({ text }: { text: string }) => hooks.onText?.(text), modelTier: agent.effort === 'high' ? 'complex' : 'default' });
+      const r = await sample(turns, { tools: tools.slice(0, limits.tools.maxCount), signal: hooks.signal, onText: ({ text }: { text: string }) => hooks.onText?.(text), modelTier: agent.effort === 'high' ? 'complex' : 'default' });
       reply = r.text + (r.truncated ? '\n\n_(Antwort gekürzt.)_' : '');
     } else {
       // Ohne Werkzeuge: Vorschlag als JSON in der Antwort
